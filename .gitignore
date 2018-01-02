@@ -57,3 +57,16 @@ typings/
 # dotenv environment variables file
 .env
 
+
+*.zip
+
+credentials.tf
+flyway.conf
+*.tfstate
+*.tfstate.backup
+.directory
+.terraform
+.idea/*
+
+package-lock.json
+

@@ -1,0 +1,4 @@
+flyway.url=jdbc:postgresql://<>:5432/domo
+flyway.user=
+flyway.password=
+flyway.locations=filesystem:.
