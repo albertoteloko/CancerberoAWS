@@ -10,7 +10,8 @@ resource "aws_api_gateway_deployment" "dev" {
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
     "aws_api_gateway_method.node",
-    "aws_api_gateway_integration.events"
+    "aws_api_gateway_integration.events",
+    "aws_cloudformation_stack.cancerbero_pool_authorizer"
   ]
   rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   stage_name = "dev"
@@ -23,7 +24,8 @@ resource "aws_api_gateway_deployment" "prod" {
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
     "aws_api_gateway_method.node",
-    "aws_api_gateway_integration.events"
+    "aws_api_gateway_integration.events",
+    "aws_cloudformation_stack.cancerbero_pool_authorizer"
   ]
   rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   stage_name = "prod"
@@ -115,8 +117,10 @@ resource "aws_api_gateway_method" "nodes" {
   rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id   = "${aws_api_gateway_resource.nodes.id}"
   http_method   = "GET"
-  authorization = "NONE"
   api_key_required = true
+  authorization = "NONE"
+//  authorization = "COGNITO_USER_POOLS"
+//  authorizer_id = "${aws_cloudformation_stack.cancerbero_pool_authorizer.outputs["AuthorizerId"]}"
 }
 
 resource "aws_api_gateway_method" "node" {
@@ -213,6 +217,29 @@ resource "aws_lambda_permission" "installations" {
   source_arn = "arn:aws:execute-api:${var.region}:${var.account_id}:${aws_api_gateway_rest_api.domo-slave-api.id}/*/*"
 }
 
+resource "aws_cloudformation_stack" "cancerbero_pool_authorizer" {
+  name = "CancerberoPoolAuthorizer"
+  template_body = <<STACK
+  {
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "CancerberoPoolAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "CancerberoPoolAuthorizer",
+        "ProviderARNs": ["arn:aws:cognito-idp:${var.region}:${var.account_id}:userpool/${aws_cognito_user_pool.pool.id}"],
+        "RestApiId": "${aws_api_gateway_rest_api.domo-slave-api.id}",
+        "Type": "COGNITO_USER_POOLS"
+      }
+    }
+  },
+  "Outputs": {
+    "AuthorizerId": {"Value": { "Ref": "CancerberoPoolAuthorizer" }}
+  }
+}
+STACK
+}
 
 output "dev_url" {
   value = "https://${aws_api_gateway_deployment.dev.rest_api_id}.execute-api.${var.region}.amazonaws.com/${aws_api_gateway_deployment.dev.stage_name}"

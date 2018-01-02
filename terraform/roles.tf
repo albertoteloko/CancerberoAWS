@@ -61,27 +61,50 @@ resource "aws_iam_role_policy" "domo_slave_lambda_policy" {
 }
 EOF
 }
-//
-//{
-//  "Effect": "Allow",
-//"Action": [
-//"logs:CreateLogGroup",
-//"logs:CreateLogStream",
-//"logs:PutLogEvents"
-//],
-//"Resource": "arn:aws:logs:*:*:*"
-//},
-//{
-//"Effect": "Allow",
-//"Action": [
-//"lambda:InvokeFunction"
-//],
-//"Resource": "arn:aws:lambda:*:*:*"
-//},
-//{
-//"Effect": "Allow",
-//"Action": [
-//"dynamodb:GetItem"
-//],
-//"Resource": "arn:aws:dynamodb:*:*:*"
-//}
+
+resource "aws_iam_role" "cognito_sms" {
+  name = "cognito_sms"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cognito-idp.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "${var.sms_external_id}"
+        }
+      }
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "cognito_sms_policy" {
+  name = "cognito_sms_policy"
+  role = "${aws_iam_role.cognito_sms.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "sns:publish"
+          ],
+          "Resource": [
+              "*"
+          ]
+      }
+  ]
+}
+EOF
+}
+

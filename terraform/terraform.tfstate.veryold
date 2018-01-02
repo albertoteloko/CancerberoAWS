@@ -1,0 +1,74 @@
+{
+    "version": 3,
+    "terraform_version": "0.11.1",
+    "serial": 2,
+    "lineage": "bd9105cd-a073-4ef6-a32a-008eb021f177",
+    "modules": [
+        {
+            "path": [
+                "root"
+            ],
+            "outputs": {},
+            "resources": {
+                "aws_cognito_user_pool.pool": {
+                    "type": "aws_cognito_user_pool",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "eu-central-1_gaSfmiMql",
+                        "attributes": {
+                            "admin_create_user_config.#": "1",
+                            "admin_create_user_config.0.allow_admin_create_user_only": "true",
+                            "admin_create_user_config.0.invite_message_template.#": "1",
+                            "admin_create_user_config.0.invite_message_template.0.email_message": "Your username is {username} and temporary password is {####}. ",
+                            "admin_create_user_config.0.invite_message_template.0.email_subject": "Your temporary password",
+                            "admin_create_user_config.0.invite_message_template.0.sms_message": "Your username is {username} and temporary password is {####}. ",
+                            "admin_create_user_config.0.unused_account_validity_days": "7",
+                            "auto_verified_attributes.#": "2",
+                            "auto_verified_attributes.2681966441": "phone_number",
+                            "auto_verified_attributes.881205744": "email",
+                            "creation_date": "2018-01-02T14:00:50Z",
+                            "device_configuration.#": "1",
+                            "device_configuration.0.challenge_required_on_new_device": "false",
+                            "device_configuration.0.device_only_remembered_on_user_prompt": "false",
+                            "email_configuration.#": "0",
+                            "email_verification_message": "Your verification code is {####}. ",
+                            "email_verification_subject": "Your verification code",
+                            "id": "eu-central-1_gaSfmiMql",
+                            "lambda_config.#": "0",
+                            "last_modified_date": "2018-01-02T14:10:10Z",
+                            "mfa_configuration": "OPTIONAL",
+                            "name": "ParticleDomo",
+                            "password_policy.#": "1",
+                            "password_policy.0.minimum_length": "8",
+                            "password_policy.0.require_lowercase": "true",
+                            "password_policy.0.require_numbers": "true",
+                            "password_policy.0.require_symbols": "true",
+                            "password_policy.0.require_uppercase": "true",
+                            "sms_authentication_message": "Your authentication code is {####}. ",
+                            "sms_configuration.#": "1",
+                            "sms_configuration.0.external_id": "a8f7ad56-bc22-422a-89c2-b4ec26150f6f",
+                            "sms_configuration.0.sns_caller_arn": "arn:aws:iam::598555414863:role/service-role/ParticleDomo-SMS-Role",
+                            "sms_verification_message": "Your verification code is {####}. ",
+                            "tags.%": "0",
+                            "username_attributes.#": "2",
+                            "username_attributes.0": "email",
+                            "username_attributes.1": "phone_number",
+                            "verification_message_template.#": "1",
+                            "verification_message_template.0.default_email_option": "CONFIRM_WITH_CODE",
+                            "verification_message_template.0.email_message": "Your verification code is {####}. ",
+                            "verification_message_template.0.email_message_by_link": "",
+                            "verification_message_template.0.email_subject": "Your verification code",
+                            "verification_message_template.0.email_subject_by_link": "",
+                            "verification_message_template.0.sms_message": "Your verification code is {####}. "
+                        },
+                        "meta": {},
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": "provider.aws"
+                }
+            },
+            "depends_on": []
+        }
+    ]
+}
