@@ -1,0 +1,24 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "CancerberoApiAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "Name": "CancerberoApiAuthorizer",
+        "Type": "COGNITO_USER_POOLS",
+        "ProviderARNs": [
+          "arn:aws:cognito-idp:${var.region}:${var.account_id}:userpool/${var.region}_${aws_cognito_user_pool.cancerbero.id}"
+        ],
+        "RestApiId": "${aws_api_gateway_rest_api.domo-slave-api.id}",
+        "IdentitySource": "method.request.header.Authorization"
+      }
+    }
+  },
+  "Outputs": {
+    "CancerberoApiAuthorizerArn": {
+      "Value": {
+        "Fn::GetAtt": [ "CancerberoApiAuthorizer", "Arn" ]
+      }
+    }
+  }
+}

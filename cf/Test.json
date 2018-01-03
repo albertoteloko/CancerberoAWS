@@ -1,0 +1,28 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "CancerberoApp": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "ClientName": "CancerberoApp",
+        "GenerateSecret": true,
+        "UserPoolId": "${aws_cognito_user_pool.cancerbero.id}"
+      }
+    }
+  },
+  "Outputs": {
+    "id": {
+      "Value": {
+        "Ref": "CancerberoApp"
+      }
+    },
+    "secret": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CancerberoApp",
+          "ClientSecret"
+        ]
+      }
+    }
+  }
+}

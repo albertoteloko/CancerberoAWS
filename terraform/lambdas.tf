@@ -10,10 +10,10 @@ resource "aws_lambda_function" "domo-slave-api-gateway-events" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      DB_USER = "${aws_db_instance.domo.username}"
-      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      DB_DATABASE = "${aws_db_instance.domo.name}"
+//      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
+//      DB_USER = "${aws_db_instance.domo.username}"
+//      DB_PASSWORD = "${aws_db_instance.domo.password}"
+//      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }
@@ -30,10 +30,10 @@ resource "aws_lambda_function" "domo-slave-api-gateway-nodes" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      DB_USER = "${aws_db_instance.domo.username}"
-      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      DB_DATABASE = "${aws_db_instance.domo.name}"
+//      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
+//      DB_USER = "${aws_db_instance.domo.username}"
+//      DB_PASSWORD = "${aws_db_instance.domo.password}"
+//      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }
@@ -50,10 +50,10 @@ resource "aws_lambda_function" "domo-slave-api-gateway-installations" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      DB_USER = "${aws_db_instance.domo.username}"
-      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      DB_DATABASE = "${aws_db_instance.domo.name}"
+//      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
+//      DB_USER = "${aws_db_instance.domo.username}"
+//      DB_PASSWORD = "${aws_db_instance.domo.password}"
+//      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }
@@ -67,12 +67,12 @@ resource "aws_lambda_function" "domo-slave-event-handler" {
   source_code_hash = "${base64sha256(file("../lambda/domo-slave-event-handler.zip"))}"
   runtime          = "nodejs6.10"
 
-  environment {
-    variables = {
-      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      DB_USER = "${aws_db_instance.domo.username}"
-      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      DB_DATABASE = "${aws_db_instance.domo.name}"
-    }
-  }
+//  environment {
+//    variables = {
+//      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
+//      DB_USER = "${aws_db_instance.domo.username}"
+//      DB_PASSWORD = "${aws_db_instance.domo.password}"
+//      DB_DATABASE = "${aws_db_instance.domo.name}"
+//    }
+//  }
 }
