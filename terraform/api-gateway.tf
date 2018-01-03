@@ -162,7 +162,7 @@ resource "aws_api_gateway_integration" "installations" {
   rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id             = "${aws_api_gateway_resource.installations.id}"
   http_method             = "${aws_api_gateway_method.installations.http_method}"
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-installations.arn}/invocations"
 }
@@ -171,7 +171,7 @@ resource "aws_api_gateway_integration" "installation" {
   rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id             = "${aws_api_gateway_resource.installation.id}"
   http_method             = "${aws_api_gateway_method.installation.http_method}"
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-installations.arn}/invocations"
 }
@@ -189,7 +189,7 @@ resource "aws_api_gateway_integration" "nodes-find" {
   rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id             = "${aws_api_gateway_resource.nodes.id}"
   http_method             = "${aws_api_gateway_method.nodes.http_method}"
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-nodes.arn}/invocations"
 }
@@ -198,7 +198,7 @@ resource "aws_api_gateway_integration" "node-read" {
   rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id             = "${aws_api_gateway_resource.node.id}"
   http_method             = "${aws_api_gateway_method.node.http_method}"
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-nodes.arn}/invocations"
 }

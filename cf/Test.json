@@ -1,11 +1,12 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Resources": {
-    "CancerberoApp": {
-      "Type": "AWS::Cognito::UserPoolClient",
+    "CancerberoGroupUsers": {
+      "Type": "AWS::Cognito::UserPoolGroup",
       "Properties": {
-        "ClientName": "CancerberoApp",
-        "GenerateSecret": true,
+        "GroupName": "Users",
+        "Precedence": 5,
+        "RoleArn": "${aws_iam_role.cancerbero_user.arn}",
         "UserPoolId": "${aws_cognito_user_pool.cancerbero.id}"
       }
     }
@@ -13,15 +14,7 @@
   "Outputs": {
     "id": {
       "Value": {
-        "Ref": "CancerberoApp"
-      }
-    },
-    "secret": {
-      "Value": {
-        "Fn::GetAtt": [
-          "CancerberoApp",
-          "ClientSecret"
-        ]
+        "Ref": "CancerberoGroupUsers"
       }
     }
   }

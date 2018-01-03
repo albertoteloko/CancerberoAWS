@@ -41,7 +41,7 @@ resource "aws_cloudformation_stack" "cancerbero_api_authorizer" {
         "Name": "CancerberoApiAuthorizer",
         "Type": "COGNITO_USER_POOLS",
         "ProviderARNs": [
-          "arn:aws:cognito-idp:${var.region}:${var.account_id}:userpool/${var.region}_${aws_cognito_user_pool.cancerbero.id}"
+          "arn:aws:cognito-idp:${var.region}:${var.account_id}:userpool/${aws_cognito_user_pool.cancerbero.id}"
         ],
         "RestApiId": "${aws_api_gateway_rest_api.domo-slave-api.id}",
         "IdentitySource": "method.request.header.Authorization"
@@ -82,28 +82,84 @@ resource "aws_cloudformation_stack" "cancerbero_pool_app" {
 STACK
 }
 
+resource "aws_cloudformation_stack" "cancerbero_group_users" {
+  name = "CancerberoGroupUsers"
+
+  template_body = <<STACK
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "CancerberoGroupUsers": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "GroupName": "Users",
+        "Precedence": 5,
+        "RoleArn": "${aws_iam_role.cancerbero_user.arn}",
+        "UserPoolId": "${aws_cognito_user_pool.cancerbero.id}"
+      }
+    }
+  },
+  "Outputs": {
+    "id": {
+      "Value": {
+        "Ref": "CancerberoGroupUsers"
+      }
+    }
+  }
+}
+STACK
+}
+
+resource "aws_cloudformation_stack" "cancerbero_group_admins" {
+  name = "CancerberoGroupAdmins"
+
+  template_body = <<STACK
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "CancerberoGroupAdmins": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "GroupName": "Admins",
+        "Precedence": 0,
+        "RoleArn": "${aws_iam_role.cancerbero_admin.arn}",
+        "UserPoolId": "${aws_cognito_user_pool.cancerbero.id}"
+      }
+    }
+  },
+  "Outputs": {
+    "id": {
+      "Value": {
+        "Ref": "CancerberoGroupAdmins"
+      }
+    }
+  }
+}
+STACK
+}
+
 
 data "external" "cognito_user_pool_client" {
-  program = ["aws",
+  program = [
+    "aws",
     "cognito-idp",
     "describe-user-pool-client",
-    "--user-pool-id" , "${aws_cognito_user_pool.cancerbero.id}",
-    "--client-id", "${aws_cloudformation_stack.cancerbero_pool_app.outputs["id"]}",
-    "--region", "${var.region}",
-    "--query", "{name:UserPoolClient.ClientName,id:UserPoolClient.ClientId,secret:UserPoolClient.ClientSecret}"
+    "--user-pool-id",
+    "${aws_cognito_user_pool.cancerbero.id}",
+    "--client-id",
+    "${aws_cloudformation_stack.cancerbero_pool_app.outputs["id"]}",
+    "--region",
+    "${var.region}",
+    "--query",
+    "{name:UserPoolClient.ClientName,id:UserPoolClient.ClientId,secret:UserPoolClient.ClientSecret}"
   ]
 }
+
+output "cognito_user_pool_id" {
+  value = "${aws_cognito_user_pool.cancerbero.id}"
+}
+
 
 output "cognito_user_pool_client" {
   value = "${data.external.cognito_user_pool_client.result}"
 }
-
-
-//resource "aws_api_gateway_authorizer" "cognito" {
-//  rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
-//  name = "CancerberoApiAuthorizer2"
-//  provider = ""
-//  providerARNs = ["arn:aws:cognito-idp:eu-central-1:598555414863:userpool/eu-central-1_HGUt2sSsH"]
-//  identity_source = "method.request.header.Authorization"
-//  type = "COGNITO_USER_POOLS"
-//}
