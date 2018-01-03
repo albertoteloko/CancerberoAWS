@@ -10,7 +10,12 @@ resource "aws_api_gateway_deployment" "dev" {
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
     "aws_api_gateway_method.node",
-    "aws_api_gateway_integration.events"
+    "aws_api_gateway_integration.events",
+    "aws_api_gateway_integration.installation",
+    "aws_api_gateway_integration.installations",
+    "aws_api_gateway_integration.node-read",
+    "aws_api_gateway_integration.nodes-find",
+    "aws_cloudformation_stack.cancerbero_api_authorizer"
   ]
   rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   stage_name = "dev"
@@ -23,7 +28,12 @@ resource "aws_api_gateway_deployment" "prod" {
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
     "aws_api_gateway_method.node",
-    "aws_api_gateway_integration.events"
+    "aws_api_gateway_integration.events",
+    "aws_api_gateway_integration.installation",
+    "aws_api_gateway_integration.installations",
+    "aws_api_gateway_integration.node-read",
+    "aws_api_gateway_integration.nodes-find",
+    "aws_cloudformation_stack.cancerbero_api_authorizer"
   ]
   rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   stage_name = "prod"
@@ -110,6 +120,10 @@ resource "aws_api_gateway_method" "events" {
   authorization = "NONE"
   api_key_required = true
 }
+//
+//data "external" "authorizer" {
+//  program = ["aws", "apigateway", "get-authorizers", "--rest-api-id", "${aws_api_gateway_rest_api.domo-slave-api.id}", "--region", "${var.region}", "--query", "items[0].{name:name,id:id,arn:authorizerUri}"]
+//}
 
 resource "aws_api_gateway_method" "nodes" {
   rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
@@ -123,8 +137,9 @@ resource "aws_api_gateway_method" "node" {
   rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id   = "${aws_api_gateway_resource.node.id}"
   http_method   = "GET"
-  authorization = "NONE"
-  api_key_required = true
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = "${aws_cloudformation_stack.cancerbero_api_authorizer.outputs["id"]}"
+  api_key_required = false
 }
 
 resource "aws_api_gateway_method" "installations" {

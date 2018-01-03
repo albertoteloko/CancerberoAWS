@@ -3,6 +3,8 @@ provider "aws" {
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
 }
+provider "external" {
+}
 
 //resource "aws_instance" "example" {
 //  key_name      = "tester"
