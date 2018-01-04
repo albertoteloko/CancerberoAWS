@@ -67,6 +67,9 @@ flyway.conf
 .directory
 .terraform
 .idea/*
+.idea
+.gradle
+build
 
 package-lock.json
 
