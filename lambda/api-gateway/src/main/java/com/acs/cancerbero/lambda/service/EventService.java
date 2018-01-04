@@ -27,9 +27,10 @@ public class EventService {
     }
 
     private APIGatewayResponse handlePing(Ping event) {
-        Optional<Node> installation = nodesRepository.read(event.nodeId);
+        Optional<Node> node = nodesRepository.read(event.nodeId);
 
-        if (installation.isPresent()) {
+        if (node.isPresent()) {
+            eventRepository.save(event);
             return APIGatewayResponse.fromJson(200, new EventMarshaller().toJson(event));
         } else {
             return APIGatewayResponse.error(412, "Node with id '" + event.nodeId + "' not found");

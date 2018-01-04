@@ -100,7 +100,8 @@ public class RequestContext implements Context {
     }
 
     private EventRepository getEventRepository() {
-        return new EventRepository();
+        Table table = getDynamoDB().getTable("EVENTS");
+        return new EventRepository(table);
     }
 
     private InstallationRepository getInstallationRepository() {

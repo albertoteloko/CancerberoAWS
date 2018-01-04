@@ -23,7 +23,7 @@ resource "aws_dynamodb_table" "nodes" {
 }
 
 resource "aws_dynamodb_table" "events" {
-  name           = "EVENT"
+  name           = "EVENTS"
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "id"

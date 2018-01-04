@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EventMarshaller extends Marshaller<Event> {
+public class EventMarshaller extends JSONMarshaller<Event> {
 
 
     @Override

@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.Optional;
 
-public class ApiGatewayRequestMarshaller extends Marshaller<APIGatewayRequest> {
+public class ApiGatewayRequestMarshaller extends JSONMarshaller<APIGatewayRequest> {
     @Override
     public JSONObject toJson(APIGatewayRequest input) {
         JSONObject result = new JSONObject();

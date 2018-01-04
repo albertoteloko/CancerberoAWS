@@ -19,7 +19,6 @@ public class NodesRepository {
     }
 
     private Node toNode(Item item) {
-        System.out.println(item.toJSONPretty());
         return new NodeMarshaller().fromJson(new JSONObject(item.toJSONPretty()));
     }
 }

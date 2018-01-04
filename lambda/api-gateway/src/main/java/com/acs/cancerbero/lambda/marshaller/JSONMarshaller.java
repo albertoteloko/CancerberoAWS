@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class Marshaller<T> {
+public abstract class JSONMarshaller<T> {
     private final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     public abstract JSONObject toJson(T input);

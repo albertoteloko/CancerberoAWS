@@ -4,7 +4,7 @@ import com.acs.cancerbero.lambda.model.events.Node;
 import org.json.JSONObject;
 
 
-public class NodeMarshaller extends Marshaller<Node> {
+public class NodeMarshaller extends JSONMarshaller<Node> {
     @Override
     public JSONObject toJson(Node input) {
         JSONObject result = new JSONObject();
