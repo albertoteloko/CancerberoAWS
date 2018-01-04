@@ -1,4 +1,4 @@
-package com.acs.cancerbero.lambda.model;
+package com.acs.cancerbero.lambda.model.api;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

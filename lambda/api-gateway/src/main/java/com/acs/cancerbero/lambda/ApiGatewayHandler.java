@@ -2,8 +2,8 @@ package com.acs.cancerbero.lambda;
 
 import com.acs.cancerbero.lambda.marshaller.ApiGatewayRequestMarshaller;
 import com.acs.cancerbero.lambda.marshaller.ApiGatewayResponseMarshaller;
-import com.acs.cancerbero.lambda.model.APIGatewayRequest;
-import com.acs.cancerbero.lambda.model.APIGatewayResponse;
+import com.acs.cancerbero.lambda.model.api.APIGatewayRequest;
+import com.acs.cancerbero.lambda.model.api.APIGatewayResponse;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import org.json.JSONException;

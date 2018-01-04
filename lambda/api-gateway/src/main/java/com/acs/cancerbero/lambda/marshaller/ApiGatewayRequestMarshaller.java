@@ -1,8 +1,7 @@
 package com.acs.cancerbero.lambda.marshaller;
 
-import com.acs.cancerbero.lambda.model.APIGatewayRequest;
-import com.acs.cancerbero.lambda.model.APIGatewayResponse;
-import com.acs.cancerbero.lambda.model.HTTPMethod;
+import com.acs.cancerbero.lambda.model.api.APIGatewayRequest;
+import com.acs.cancerbero.lambda.model.api.HTTPMethod;
 import org.json.JSONObject;
 
 import java.util.Map;

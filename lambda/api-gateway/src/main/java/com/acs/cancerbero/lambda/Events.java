@@ -1,12 +1,10 @@
 package com.acs.cancerbero.lambda;
 
-import com.acs.cancerbero.lambda.marshaller.ApiGatewayRequestMarshaller;
 import com.acs.cancerbero.lambda.marshaller.EventMarshaller;
-import com.acs.cancerbero.lambda.model.APIGatewayRequest;
-import com.acs.cancerbero.lambda.model.APIGatewayResponse;
-import com.acs.cancerbero.lambda.model.HTTPMethod;
+import com.acs.cancerbero.lambda.model.api.APIGatewayRequest;
+import com.acs.cancerbero.lambda.model.api.APIGatewayResponse;
+import com.acs.cancerbero.lambda.model.api.HTTPMethod;
 import com.acs.cancerbero.lambda.model.events.Event;
-import org.json.JSONObject;
 
 import java.util.Optional;
 
@@ -28,8 +26,7 @@ public class Events extends ApiGatewayHandler {
         EventMarshaller eventMarshaller = new EventMarshaller();
         Optional<Event> event = request.fromJson(eventMarshaller::fromJson);
         if (event.isPresent()) {
-//            JSONObject json = new ApiGatewayRequestMarshaller().toJson(request);
-            return APIGatewayResponse.fromJson(200, eventMarshaller.toJson(event.get()));
+            return context.getEventService().process(event.get());
         } else {
             return APIGatewayResponse.error(400, "Missing body");
         }

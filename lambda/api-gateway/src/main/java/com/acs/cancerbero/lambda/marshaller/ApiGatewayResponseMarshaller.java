@@ -1,12 +1,10 @@
 package com.acs.cancerbero.lambda.marshaller;
 
-import com.acs.cancerbero.lambda.model.APIGatewayResponse;
+import com.acs.cancerbero.lambda.model.api.APIGatewayResponse;
 import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ApiGatewayResponseMarshaller extends Marshaller<APIGatewayResponse> {
     @Override

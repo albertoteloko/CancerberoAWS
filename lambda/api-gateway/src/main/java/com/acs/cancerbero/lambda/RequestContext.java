@@ -1,5 +1,8 @@
 package com.acs.cancerbero.lambda;
 
+import com.acs.cancerbero.lambda.repository.EventRepository;
+import com.acs.cancerbero.lambda.repository.InstallationRepository;
+import com.acs.cancerbero.lambda.service.EventService;
 import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -79,5 +82,20 @@ public class RequestContext implements Context {
 
     public void error(Throwable e) {
         e.printStackTrace();
+    }
+
+    public EventService getEventService() {
+        return new EventService(
+                getEventRepository(),
+                getInstallationRepository()
+        );
+    }
+
+    private EventRepository getEventRepository() {
+        return new EventRepository();
+    }
+
+    private InstallationRepository getInstallationRepository() {
+        return new InstallationRepository();
     }
 }
