@@ -24,15 +24,15 @@ abstract class ApiGatewayHandler implements RequestStreamHandler {
             APIGatewayRequest request = readRequest(inputStream);
             APIGatewayResponse response1 = handlerRequest(request, requestContext);
             sendResponse(outputStream, response1);
-        } catch (JSONException e) {
-            sendResponse(outputStream, APIGatewayResponse.error(400, e.getMessage()));
+        } catch (JSONException | IllegalArgumentException e) {
+            sendResponse(outputStream, APIGatewayResponse.error(400, e));
             requestContext.error(e);
         } finally {
             requestContext.end();
         }
     }
 
-    protected abstract APIGatewayResponse handlerRequest(APIGatewayRequest requestRequestContext, RequestContext context);
+    protected abstract APIGatewayResponse handlerRequest(APIGatewayRequest request, RequestContext context);
 
     private APIGatewayRequest readRequest(InputStream inputStream) throws IOException {
         String input = read(inputStream);

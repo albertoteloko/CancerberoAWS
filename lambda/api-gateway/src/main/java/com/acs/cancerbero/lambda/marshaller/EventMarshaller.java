@@ -1,50 +1,44 @@
 package com.acs.cancerbero.lambda.marshaller;
 
-import com.acs.cancerbero.lambda.model.APIGatewayRequest;
-import com.acs.cancerbero.lambda.model.APIGatewayResponse;
-import com.acs.cancerbero.lambda.model.HTTPMethod;
+import com.acs.cancerbero.lambda.model.events.Event;
+import com.acs.cancerbero.lambda.model.events.Ping;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
-public class ApiGatewayRequestMarshaller extends Marshaller<APIGatewayRequest> {
+public class EventMarshaller extends Marshaller<Event> {
+
+
     @Override
-    public JSONObject toJson(APIGatewayRequest input) {
+    public JSONObject toJson(Event input) {
         JSONObject result = new JSONObject();
-        result.put("resource", input.resource);
-        result.put("path", input.path);
-        result.put("httpMethod", input.method);
-        result.put("headers", input.headers);
-        result.put("queryStringParameters", input.queryParameters);
-        result.put("pathParameters", input.pathParameters);
-        result.put("stageVariables", input.stageVariables);
-        result.put("body", input.body.orElse(null));
+        result.put("id", input.id);
+        result.put("type", input.type);
+        result.put("nodeId", input.nodeId);
+        putLocalDateTime(result, "timestamp", input.timestamp);
+
+        if (input instanceof Ping) {
+
+        }
         return result;
     }
 
 
     @Override
-    public APIGatewayRequest fromJson(JSONObject input) {
-        String resource = input.getString("resource");
-        String path = input.getString("path");
-        HTTPMethod method = input.getEnum(HTTPMethod.class, "httpMethod");
-        Map<String, String> headers = toMap(input.optJSONObject("headers"));
-        Map<String, String> queryParameters = toMap(input.optJSONObject("queryStringParameters"));
-        Map<String, String> pathParameters = toMap(input.optJSONObject("pathParameters"));
-        Map<String, String> stageVariables = toMap(input.optJSONObject("stageVariables"));
-        Optional<String> body = Optional.ofNullable(input.optString("body"));
+    public Event fromJson(JSONObject input) {
+        UUID id = Optional.ofNullable(input.optString("id")).filter(s -> !s.isEmpty()).map(UUID::fromString).orElse(UUID.randomUUID());
+        String type = input.getString("type");
+        String nodeId = input.getString("nodeId");
+        LocalDateTime timestamp = getLocalDateTime(input, "timestamp");
 
-        return new APIGatewayRequest(
-                resource,
-                path,
-                method,
-                headers,
-                queryParameters,
-                pathParameters,
-                stageVariables,
-                body
-        );
+        if (type.equals("ping")) {
+            return new Ping(id, nodeId, timestamp);
+        } else {
+            throw new JSONException("Event type '" + type + "' not supported");
+        }
     }
 
     //    {

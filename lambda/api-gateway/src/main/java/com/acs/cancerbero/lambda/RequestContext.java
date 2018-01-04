@@ -78,6 +78,6 @@ public class RequestContext implements Context {
     }
 
     public void error(Throwable e) {
-
+        e.printStackTrace();
     }
 }
