@@ -120,10 +120,6 @@ resource "aws_api_gateway_method" "events" {
   authorization = "NONE"
   api_key_required = true
 }
-//
-//data "external" "authorizer" {
-//  program = ["aws", "apigateway", "get-authorizers", "--rest-api-id", "${aws_api_gateway_rest_api.domo-slave-api.id}", "--region", "${var.region}", "--query", "items[0].{name:name,id:id,arn:authorizerUri}"]
-//}
 
 resource "aws_api_gateway_method" "nodes" {
   rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
