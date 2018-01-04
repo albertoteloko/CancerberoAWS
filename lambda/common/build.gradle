@@ -1,0 +1,7 @@
+dependencies {
+    api 'com.amazonaws:aws-lambda-java-core:1.1.0'
+    api 'com.amazonaws:aws-lambda-java-events:1.1.0'
+
+    api 'org.json:json:20171018'
+    compileOnly 'org.projectlombok:lombok:1.16.6'
+}

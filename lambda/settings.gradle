@@ -1,0 +1,4 @@
+rootProject.name = 'cancerbero-lambdas'
+
+include 'common'
+include 'api-gateway'
