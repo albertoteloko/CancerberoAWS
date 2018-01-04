@@ -8,4 +8,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Node {
+    public final String id;
+    public final String name;
 }

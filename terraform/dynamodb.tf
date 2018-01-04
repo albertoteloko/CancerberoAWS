@@ -2,10 +2,10 @@ resource "aws_dynamodb_table" "installations" {
   name           = "INSTALLATIONS"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "Id"
+  hash_key       = "id"
 
   attribute {
-    name = "Id"
+    name = "id"
     type = "S"
   }
 }
@@ -14,10 +14,10 @@ resource "aws_dynamodb_table" "nodes" {
   name           = "NODES"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "Id"
+  hash_key       = "id"
 
   attribute {
-    name = "Id"
+    name = "id"
     type = "S"
   }
 }
@@ -26,16 +26,16 @@ resource "aws_dynamodb_table" "events" {
   name           = "EVENT"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "Id"
-  range_key      = "NodeId"
+  hash_key       = "id"
+  range_key      = "nodeId"
 
   attribute {
-    name = "Id"
+    name = "id"
     type = "S"
   }
 
   attribute {
-    name = "NodeId"
+    name = "nodeId"
     type = "S"
   }
 }

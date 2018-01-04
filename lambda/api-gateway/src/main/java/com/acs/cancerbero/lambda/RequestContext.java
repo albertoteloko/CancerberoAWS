@@ -4,6 +4,7 @@ import com.acs.cancerbero.lambda.repository.EventRepository;
 import com.acs.cancerbero.lambda.repository.InstallationRepository;
 import com.acs.cancerbero.lambda.repository.NodesRepository;
 import com.acs.cancerbero.lambda.service.EventService;
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -114,9 +115,12 @@ public class RequestContext implements Context {
 
 
     private DynamoDB getDynamoDB() {
+        ClientConfiguration config = new ClientConfiguration();
+        config.setMaxErrorRetry(1);
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder
                 .standard()
                 .withRegion(Regions.EU_CENTRAL_1)
+                .withClientConfiguration(config)
                 .build();
         return new DynamoDB(client);
     }
