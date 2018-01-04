@@ -10,6 +10,18 @@ resource "aws_dynamodb_table" "installations" {
   }
 }
 
+resource "aws_dynamodb_table" "nodes" {
+  name           = "NODES"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "Id"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+}
+
 resource "aws_dynamodb_table" "events" {
   name           = "EVENT"
   read_capacity  = 5

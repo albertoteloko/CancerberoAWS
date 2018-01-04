@@ -2,6 +2,8 @@ dependencies {
     api 'com.amazonaws:aws-lambda-java-core:1.1.0'
     api 'com.amazonaws:aws-lambda-java-events:1.1.0'
 
+    compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.257'
+
     compile 'org.json:json:20171018'
     compileOnly 'org.projectlombok:lombok:1.16.6'
 }

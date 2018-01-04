@@ -2,7 +2,13 @@ package com.acs.cancerbero.lambda;
 
 import com.acs.cancerbero.lambda.repository.EventRepository;
 import com.acs.cancerbero.lambda.repository.InstallationRepository;
+import com.acs.cancerbero.lambda.repository.NodesRepository;
 import com.acs.cancerbero.lambda.service.EventService;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -87,7 +93,8 @@ public class RequestContext implements Context {
     public EventService getEventService() {
         return new EventService(
                 getEventRepository(),
-                getInstallationRepository()
+                getInstallationRepository(),
+                getNodesRepository()
         );
     }
 
@@ -96,6 +103,21 @@ public class RequestContext implements Context {
     }
 
     private InstallationRepository getInstallationRepository() {
-        return new InstallationRepository();
+        Table table = getDynamoDB().getTable("INSTALLATIONS");
+        return new InstallationRepository(table);
+    }
+
+    private NodesRepository getNodesRepository() {
+        Table table = getDynamoDB().getTable("NODES");
+        return new NodesRepository(table);
+    }
+
+
+    private DynamoDB getDynamoDB() {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder
+                .standard()
+                .withRegion(Regions.EU_CENTRAL_1)
+                .build();
+        return new DynamoDB(client);
     }
 }
