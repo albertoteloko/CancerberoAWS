@@ -21,7 +21,7 @@ exports.handler = function (event, context, callback) {
             },
         });
     } else {
-        if(deviceEvent.id === undefined){
+        if (deviceEvent.id === undefined) {
             deviceEvent.id = context.awsRequestId;
         }
         console.log("Event", deviceEvent);

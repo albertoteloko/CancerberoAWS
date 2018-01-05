@@ -1,10 +1,14 @@
 const ALARM_STATUSES = ["IDLE", "ACTIVATING", "ACTIVATED", "SUSPICIOUS", "ALARMED", "SABOTAGE", "SAFETY"];
+const LOG_LEVELS = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
 module.exports = {
     validString(value) {
         return (value !== undefined) && (value !== null) && (value !== '');
     },
     validAlarmStatus(value) {
         return this.validString(value) && ALARM_STATUSES.indexOf(value.toUpperCase()) > -1;
+    },
+    validLogLevel(value) {
+        return this.validString(value) && LOG_LEVELS.indexOf(value.toUpperCase()) > -1;
     },
     validDate(value) {
         return !isNaN(Date.parse(value));
@@ -29,6 +33,8 @@ module.exports = {
             return this.validatePinChangedEvent(event);
         } else if (event.type === "alarm-status-changed") {
             return this.validateAlarmStatusChangedEvent(event);
+        } else if (event.type === "log") {
+            return this.validateLogEvent(event);
         }
         return null;
     },
@@ -56,6 +62,16 @@ module.exports = {
             return "Missing/Invalid value param";
         } else if (!this.validString(event.source)) {
             return "Missing/Invalid source param";
+        }
+        return null;
+    },
+    validateLogEvent(event) {
+        if (!this.validLogLevel(event.level)) {
+            return "Missing/Invalid level param";
+        } else if (!this.validString(event.class)) {
+            return "Missing/Invalid class param";
+        } else if (!this.validString(event.message)) {
+            return "Missing/Invalid message param";
         }
         return null;
     }

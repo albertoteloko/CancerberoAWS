@@ -1,7 +1,5 @@
 const nodeRepository = require('node-repository');
 const eventRepository = require('event-repository');
-// const pinChangeEventRepository = require('pin-change-event-repository');
-// const nodeStatusChangeEventRepository = require('node-status-change-event-repository');
 
 module.exports = {
     handle(event) {
@@ -13,6 +11,8 @@ module.exports = {
             return handlePinChanged(event);
         } else if (event.type === 'alarm-status-changed') {
             return handleAlarmStatusChanged(event);
+        } else if (event.type === 'log') {
+            return handleLog(event);
         } else {
             return Promise.reject("Unknown event name: " + event.type);
         }
@@ -89,6 +89,17 @@ function handleAlarmStatusChanged(event) {
             return nodeRepository.save(node).then(result => {
                 return eventRepository.save(event);
             });
+        } else {
+            return Promise.reject("Node " + nodeId + " not found")
+        }
+    });
+}
+
+function handleLog(event) {
+    const nodeId = event.nodeId;
+    return nodeRepository.read(nodeId).then(node => {
+        if (node != null) {
+            return eventRepository.save(event);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
         }
