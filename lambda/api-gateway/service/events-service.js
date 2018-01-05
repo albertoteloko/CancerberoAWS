@@ -1,5 +1,5 @@
-const nodeRepository = require('node-repository');
-const eventRepository = require('event-repository');
+const nodeRepository = require('../repository/node-repository');
+const eventRepository = require('../repository/event-repository');
 
 module.exports = {
     handle(event) {

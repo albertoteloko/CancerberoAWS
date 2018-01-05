@@ -1,0 +1,22 @@
+[
+  {
+    "id": "8fe8e3aa-f21c-11e7-9e16-d3d2028af175",
+    "name": "Talamanca",
+    "nodes": [
+      "1234567890"
+    ],
+    "users": [
+      "800d4f0a-74f5-4ddf-86d9-471f919e8098"
+    ]
+  },
+  {
+    "id": "8fe8e3aa-f21c-11e7-9e16-d3d2028af176",
+    "name": "Costuras Piñon",
+    "nodes": [
+      "1234567890"
+    ],
+    "users": [
+      "800d4f0a-74f5-4ddf-86d9-471f919e8098"
+    ]
+  }
+]

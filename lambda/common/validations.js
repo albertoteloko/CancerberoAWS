@@ -1,5 +1,6 @@
 const ALARM_STATUSES = ["IDLE", "ACTIVATING", "ACTIVATED", "SUSPICIOUS", "ALARMED", "SABOTAGE", "SAFETY"];
 const LOG_LEVELS = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
+
 module.exports = {
     validString(value) {
         return (value !== undefined) && (value !== null) && (value !== '');

@@ -30,7 +30,8 @@ if [ -f $PACKAGE_FILE ]; then
 else 
    echo "File $PACKAGE_FILE does not exist." 
 fi 
- 
+
+rm -f "$DIR/domo-slave-$FUNCTION_NAME.zip"
 zip -q -r "$DIR/domo-slave-$FUNCTION_NAME.zip" . * 
 cd "$CURRENT_DIR" 
 rm -rf "$TMP_DIR" 

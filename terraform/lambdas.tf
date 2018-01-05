@@ -10,10 +10,6 @@ resource "aws_lambda_function" "domo-slave-api-gateway-events" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      //      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      //      DB_USER = "${aws_db_instance.domo.username}"
-      //      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      //      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }
@@ -30,10 +26,6 @@ resource "aws_lambda_function" "domo-slave-api-gateway-nodes" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      //      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      //      DB_USER = "${aws_db_instance.domo.username}"
-      //      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      //      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }
@@ -50,10 +42,6 @@ resource "aws_lambda_function" "domo-slave-api-gateway-installations" {
   environment {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}"
-      //      DB_ENDPOINT = "${aws_db_instance.domo.endpoint}"
-      //      DB_USER = "${aws_db_instance.domo.username}"
-      //      DB_PASSWORD = "${aws_db_instance.domo.password}"
-      //      DB_DATABASE = "${aws_db_instance.domo.name}"
     }
   }
 }

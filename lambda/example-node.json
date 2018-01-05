@@ -26,5 +26,9 @@
       }
     }
   },
-  "name": "Cocina"
+  "name": "Cocina",
+  "type": "photon",
+  "installations": [
+    "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
+  ]
 }

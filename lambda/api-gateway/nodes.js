@@ -1,4 +1,4 @@
-const nodeRepository = require('node-repository');
+const nodeRepository = require('repository/node-repository');
 const validations = require('validations');
 
 

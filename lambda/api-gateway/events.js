@@ -1,10 +1,10 @@
 const validations = require('validations');
-const eventService = require('events-service');
+const eventService = require('service/events-service');
 
 
 exports.handler = function (event, context, callback) {
-    console.log("Event", event);
-    console.log("context", context);
+    console.log("Input", event);
+    console.log("Context", context);
 
     let deviceEvent = (event.body !== undefined) ? JSON.parse(event.body) : event;
     console.log("deviceEvent", deviceEvent);
