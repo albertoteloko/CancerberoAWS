@@ -1,14 +1,10 @@
-const AWS = require('aws-sdk');
 const validations = require('validations');
 const eventService = require('events-service');
 
 
-const region = process.env.AWS_REGION;
-
-AWS.config.region = region;
-
 exports.handler = function (event, context, callback) {
     console.log("Event", event);
+    console.log("context", context);
 
     let deviceEvent = (event.body !== undefined) ? JSON.parse(event.body) : event;
     console.log("deviceEvent", deviceEvent);
@@ -25,7 +21,9 @@ exports.handler = function (event, context, callback) {
             },
         });
     } else {
-
+        if(deviceEvent.id === undefined){
+            deviceEvent.id = context.awsRequestId;
+        }
         console.log("Event", deviceEvent);
         eventService.handle(deviceEvent).then(event => {
             callback(null, {

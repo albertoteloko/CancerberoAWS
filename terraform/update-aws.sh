@@ -2,9 +2,5 @@
 
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-cd "$DIR/../lambda/"
-./gradlew buildZip
-cd "$DIR"
+../lambda/package-all-lambdas.sh
 terraform apply -auto-approve

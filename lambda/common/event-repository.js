@@ -2,18 +2,18 @@ const AWS = require('aws-sdk');
 
 const region = process.env.AWS_REGION;
 const docClient = new AWS.DynamoDB.DocumentClient();
-const TABLE = 'NODES';
+const TABLE = 'EVENTS';
 
 AWS.config.region = region;
 
 module.exports = {
-    read: function (nodeId) {
-        console.log("Search node with id: ", nodeId);
+    read: function (eventId) {
+        console.log("Search event with id: ", eventId);
 
         let params = {
             TableName: TABLE,
             Key: {
-                "id": nodeId,
+                "id": eventId,
             }
         };
 
@@ -25,16 +25,16 @@ module.exports = {
             }
         });
     },
-    save: function (node) {
-        console.log("Savings node: ", node);
+    save: function (event) {
+        console.log("Savings event: ", event);
 
         let params = {
             TableName:TABLE,
-            Item: node
+            Item: event
         };
 
         return docClient.put(params).promise().then(item => {
-                return node
+                return event
         });
     }
 };
