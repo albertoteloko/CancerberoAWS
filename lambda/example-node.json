@@ -1,23 +1,30 @@
 {
   "id": "1234567890",
   "lastPing": "2012-12-12T22:00:01",
-  "name": "Cocina",
-  "pins": [
-    {
-      "activations": {
+  "modules": {
+    "alarm": {
+      "pins": {
+        "A0": {
+          "activations": {
+            "timestamp": "2012-12-12T22:00:28",
+            "value": "135"
+          },
+          "id": "A0",
+          "input": "digital",
+          "mode": "low",
+          "readings": {
+            "timestamp": "2012-12-12T22:00:38",
+            "value": "136"
+          },
+          "threshold": 0,
+          "type": "sensor"
+        }
+      },
+      "status": {
         "timestamp": "2012-12-12T22:00:07",
-        "value": "12"
-      },
-      "id": "A0",
-      "input": "digital",
-      "readings": {
-        "timestamp": "2012-12-12T22:00:08",
-        "value": "134"
-      },
-      "threshold": 0,
-      "type": "sensor",
-      "mode": "low"
+        "value": "IDLE"
+      }
     }
-  ],
-  "status": "IDLE"
+  },
+  "name": "Cocina"
 }
