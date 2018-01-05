@@ -1,6 +1,10 @@
+const ALARM_STATUSES = ["IDLE", "ACTIVATING", "ACTIVATED", "SUSPICIOUS", "ALARMED", "SABOTAGE", "SAFETY"];
 module.exports = {
     validString(value) {
         return (value !== undefined) && (value !== null) && (value !== '');
+    },
+    validAlarmStatus(value) {
+        return this.validString(value) && ALARM_STATUSES.indexOf(value.toUpperCase()) > -1;
     },
     validDate(value) {
         return !isNaN(Date.parse(value));
@@ -19,12 +23,12 @@ module.exports = {
 
         if (event.type === "ping") {
             return this.validatePingEvent(event);
-        } else if (event.type === "pin-activated") {
+        } else if (event.type === "alarm-pin-activated") {
             return this.validatePinActivatedEvent(event);
-        } else if (event.type === "pin-change") {
-            return this.validatePinChangeEvent(event);
-        } else if (event.type === "status-change") {
-            return this.validateNodeStatusChangeEvent(event);
+        } else if (event.type === "alarm-pin-changed") {
+            return this.validatePinChangedEvent(event);
+        } else if (event.type === "alarm-status-changed") {
+            return this.validateAlarmStatusChangedEvent(event);
         }
         return null;
     },
@@ -39,7 +43,7 @@ module.exports = {
         }
         return null;
     },
-    validatePinChangeEvent(event) {
+    validatePinChangedEvent(event) {
         if (!this.validString(event.pinId)) {
             return "Missing/Invalid pinId param";
         } else if (!this.validString(event.value)) {
@@ -47,9 +51,11 @@ module.exports = {
         }
         return null;
     },
-    validateNodeStatusChangeEvent(event) {
-        if (!this.validString(event.status)) {
-            return "Missing/Invalid status param";
+    validateAlarmStatusChangedEvent(event) {
+        if (!this.validAlarmStatus(event.value)) {
+            return "Missing/Invalid value param";
+        } else if (!this.validString(event.source)) {
+            return "Missing/Invalid source param";
         }
         return null;
     }

@@ -7,12 +7,12 @@ module.exports = {
     handle(event) {
         if (event.type === 'ping') {
             return handlePing(event);
-        } else if (event.type === 'pin-activated') {
-            return handlePinActivation(event);
-        } else if (event.type === 'pin-change') {
-            return handlePinChange(event);
-            // } else if (event.name === 'status-change') {
-            //     return handleNodeStatusChange(event);
+        } else if (event.type === 'alarm-pin-activated') {
+            return handlePinActivated(event);
+        } else if (event.type === 'alarm-pin-changed') {
+            return handlePinChanged(event);
+        } else if (event.type === 'alarm-status-changed') {
+            return handleAlarmStatusChanged(event);
         } else {
             return Promise.reject("Unknown event name: " + event.type);
         }
@@ -35,7 +35,7 @@ function handlePing(event) {
     });
 }
 
-function handlePinActivation(event) {
+function handlePinActivated(event) {
     const nodeId = event.nodeId;
     return nodeRepository.read(nodeId).then(node => {
         if (node != null) {
@@ -55,7 +55,7 @@ function handlePinActivation(event) {
     });
 }
 
-function handlePinChange(event) {
+function handlePinChanged(event) {
     const nodeId = event.nodeId;
     return nodeRepository.read(nodeId).then(node => {
         if (node != null) {
@@ -77,6 +77,25 @@ function handlePinChange(event) {
     });
 }
 
+function handleAlarmStatusChanged(event) {
+    const nodeId = event.nodeId;
+    return nodeRepository.read(nodeId).then(node => {
+        if (node != null) {
+            let alarm = node.modules.alarm;
+            if ((alarm.status !== undefined) && (alarm.status.value === event.value)) {
+                return Promise.reject("Node " + nodeId + " does not change its status");
+            }
+            setAlarmStatus(alarm, event);
+            return nodeRepository.save(node).then(result => {
+                return eventRepository.save(event);
+            });
+        } else {
+            return Promise.reject("Node " + nodeId + " not found")
+        }
+    });
+}
+
+
 function setPinActivations(pin, event) {
     if (pin.activations === undefined) {
         pin.activations = {};
@@ -93,27 +112,11 @@ function setPinReading(pin, event) {
     pin.readings.value = event.value;
 }
 
-function handleAlarmStatusChange(event) {
-    const nodeId = event.nodeId;
-    const status = event.status;
-    return nodeRepository.getNode(nodeId).then(node => {
-        if (node != null) {
-            if (status !== node.status) {
-                return nodeStatusChangeEventRepository.storeStatusChange(node.id, status)
-            } else {
-                return Promise.reject("No changes in the node status");
-            }
-        } else {
-            return Promise.reject("Node " + nodeId + " not found")
-        }
-    });
-}
-
-function findPin(pins, pinId) {
-    for (let pin of pins) {
-        if (pin.pin_id === pinId) {
-            return pin;
-        }
+function setAlarmStatus(alarm, event) {
+    if (alarm.status === undefined) {
+        alarm.status = {};
     }
-    return null;
+    alarm.status.timestamp = event.timestamp;
+    alarm.status.value = event.value;
+    alarm.status.source = event.source;
 }
