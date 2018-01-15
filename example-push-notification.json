@@ -1,0 +1,4 @@
+{
+  "GCM": "{\"data\":{\"title\":\"Important announcement\",\"message\":\"Hello wolrd!\",\"url\":\"www.amazon.com\"},\"time_to_live\": 3600,\"collapse_key\":\"deals\"}"
+}
+       
