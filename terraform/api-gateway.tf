@@ -9,6 +9,7 @@ resource "aws_api_gateway_deployment" "dev" {
     "aws_api_gateway_method.installations",
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
+    "aws_api_gateway_method.node-action",
     "aws_api_gateway_method.node",
     "aws_api_gateway_integration.events",
     "aws_api_gateway_integration.installation",
@@ -27,6 +28,7 @@ resource "aws_api_gateway_deployment" "prod" {
     "aws_api_gateway_method.installations",
     "aws_api_gateway_method.installation",
     "aws_api_gateway_method.nodes",
+    "aws_api_gateway_method.node-action",
     "aws_api_gateway_method.node",
     "aws_api_gateway_integration.events",
     "aws_api_gateway_integration.installation",
@@ -113,6 +115,12 @@ resource "aws_api_gateway_resource" "node" {
   path_part   = "{id}"
 }
 
+resource "aws_api_gateway_resource" "node-action" {
+  rest_api_id = "${aws_api_gateway_rest_api.domo-slave-api.id}"
+  parent_id   = "${aws_api_gateway_resource.node.id}"
+  path_part   = "actions"
+}
+
 resource "aws_api_gateway_method" "events" {
   rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id   = "${aws_api_gateway_resource.events.id}"
@@ -137,6 +145,17 @@ resource "aws_api_gateway_method" "node" {
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = "${aws_cloudformation_stack.cancerbero_api_authorizer.outputs["id"]}"
   api_key_required = false
+}
+
+resource "aws_api_gateway_method" "node-action" {
+  rest_api_id   = "${aws_api_gateway_rest_api.domo-slave-api.id}"
+  resource_id   = "${aws_api_gateway_resource.node-action.id}"
+  http_method   = "POST"
+  authorization = "NONE"
+  api_key_required = true
+//  authorization = "COGNITO_USER_POOLS"
+//  authorizer_id = "${aws_cloudformation_stack.cancerbero_api_authorizer.outputs["id"]}"
+//  api_key_required = false
 }
 
 resource "aws_api_gateway_method" "installations" {
@@ -197,6 +216,15 @@ resource "aws_api_gateway_integration" "node-read" {
   rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
   resource_id             = "${aws_api_gateway_resource.node.id}"
   http_method             = "${aws_api_gateway_method.node.http_method}"
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-nodes.arn}/invocations"
+}
+
+resource "aws_api_gateway_integration" "node-action" {
+  rest_api_id             = "${aws_api_gateway_rest_api.domo-slave-api.id}"
+  resource_id             = "${aws_api_gateway_resource.node-action.id}"
+  http_method             = "${aws_api_gateway_method.node-action.http_method}"
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.domo-slave-api-gateway-nodes.arn}/invocations"
