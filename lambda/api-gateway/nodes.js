@@ -119,7 +119,9 @@ exports.handler = function (event, context, callback) {
             nodeRepository.read(id)
                 .then(node => {
                     if (node != null) {
-                        nodeGateway.run(node, event)
+                        let action = (event.body !== undefined) ? JSON.parse(event.body) : event;
+                        console.log("action", action);
+                        nodeGateway.run(node, action)
                             .then(result => {
                                 callback(null, {
                                     statusCode: '200',
@@ -131,8 +133,8 @@ exports.handler = function (event, context, callback) {
                             })
                             .catch(e => {
                                     callback(null, {
-                                        statusCode: '500',
-                                        body: JSON.stringify({'message': e.stack}),
+                                        statusCode: e.code ? e.code : 500,
+                                        body: JSON.stringify({'message': e.message ? e.message : e}),
                                         headers: {
                                             'Content-Type': 'application/json',
                                         },

@@ -7,13 +7,13 @@ const password = process.env.PARTICLE_API_PASSWORD;
 const particle = new Particle();
 
 module.exports = {
-    run: function (node, event, source) {
-        console.log("Action in node " + node.id + ": ", event);
+    run: function (node, action, source) {
+        console.log("Action in node " + node.id + ": ", action);
 
-        if(event.name === "setAlarmStatus"){
-            return setAlarmStatus(node, event, source);
-        }else{
-            return Promise.reject("Missing/invalid name field");
+        if (action.name === "alarmKey") {
+            return alarmKey(node, action.source);
+        } else {
+            return Promise.reject({"code": 400, "message": "Missing/invalid name field"});
         }
 
         // var token;
@@ -28,17 +28,75 @@ module.exports = {
         //     }
         // );
         // return Promise.resolve("asd");
-        return execute(node.id, "A.setStatus", "IDLE")
+
     }
 };
 
-function setAlarmStatus(node, event, source) {
+function alarmKey(node, source) {
+    if (node.modules.alarm) {
+        return login().then(token => {
+            return getVar(node.id, "A.status", token).then(status => {
+                console.log("Status", status);
+                let sourceString = source ? "," + source : "";
+                if (status === "IDLE") {
+                    return execute(node.id, "A.status", "ACTIVATING" + sourceString, token).then(toStatus);
+                } else {
+                    return execute(node.id, "A.status", "IDLE" + sourceString, token).then(toStatus);
+                }
+            })
+        });
 
+    } else {
+        return Promise.reject({"code": 412, "message": "Node doesn't have any alarm module"});
+    }
 }
 
-function execute(nodeId, functionName, functionParam) {
-    return particle.login({username: username, password: password}).then(data => {
-        let token = data.body.access_token;
-        return particle.callFunction({deviceId: nodeId, name: functionName, argument: functionParam, auth: token});
+function login() {
+    return particle.login({username: username, password: password}).then(data => data.body.access_token);
+}
+
+function execute(nodeId, functionName, functionParam, sharedToken) {
+    let promise = sharedToken ? Promise.resolve(sharedToken) : login();
+    return promise.then(token => {
+        return particle.callFunction({
+            deviceId: nodeId,
+            name: functionName,
+            argument: functionParam,
+            auth: token
+        }).then(data => data.body.return_value);
     });
+}
+
+function getVar(nodeId, varName, sharedToken) {
+    let promise = sharedToken ? Promise.resolve(sharedToken) : login();
+    return promise.then(token => {
+        return particle.getVariable({
+            deviceId: nodeId,
+            name: varName,
+            auth: token
+        }).then(data => data.body.result);
+    });
+}
+
+function toStatus(number) {
+    switch (number) {
+        case -2:
+            return "UNCHANGED";
+        case -1:
+            return "UNKNOWN";
+        case 1:
+            return "IDLE";
+        case 2:
+            return "ACTIVATING";
+        case 3:
+            return "ACTIVATED";
+        case 4:
+            return "SUSPICIOUS";
+        case 5:
+            return "ALARMED";
+        case 6:
+            return "SAFETY";
+        case 7:
+            return "SABOTAGE";
+    }
 }

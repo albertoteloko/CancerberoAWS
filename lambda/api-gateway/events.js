@@ -7,6 +7,9 @@ exports.handler = function (event, context, callback) {
     console.log("Context", context);
 
     let deviceEvent = (event.body !== undefined) ? JSON.parse(event.body) : event;
+    if (deviceEvent.data !== undefined) {
+        deviceEvent = JSON.parse(deviceEvent.data);
+    }
     console.log("deviceEvent", deviceEvent);
 
     let validation = validations.validateEvent(deviceEvent);
