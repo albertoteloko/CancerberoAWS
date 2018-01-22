@@ -120,24 +120,25 @@ exports.handler = function (event, context, callback) {
                 .then(node => {
                     if (node != null) {
                         nodeGateway.run(node, event)
-                            .then(value => {
+                            .then(result => {
                                 callback(null, {
                                     statusCode: '200',
-                                    body: JSON.stringify(value),
+                                    body: JSON.stringify(result),
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
                                 });
-                            }).catch(e => {
-                                callback(null, {
-                                    statusCode: '500',
-                                    body: JSON.stringify({'message': e.stack}),
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                });
-                            }
-                        );
+                            })
+                            .catch(e => {
+                                    callback(null, {
+                                        statusCode: '500',
+                                        body: JSON.stringify({'message': e.stack}),
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                    });
+                                }
+                            );
                     } else {
                         callback(null, {
                             statusCode: '204',

@@ -1,42 +1,44 @@
-const AWS = require('aws-sdk');
+const Particle = require('particle-api-js');
+const validations = require('validations');
 
-const region = process.env.AWS_REGION;
-const docClient = new AWS.DynamoDB.DocumentClient();
-const TABLE = 'EVENTS';
+const username = process.env.PARTICLE_API_USER;
+const password = process.env.PARTICLE_API_PASSWORD;
 
-AWS.config.region = region;
+const particle = new Particle();
 
 module.exports = {
-    run: function (node, event) {
-        console.log("Action on " + node.id + ": ", event);
+    run: function (node, event, source) {
+        console.log("Action in node " + node.id + ": ", event);
 
-        return Promise.resolve("done")
+        if(event.name === "setAlarmStatus"){
+            return setAlarmStatus(node, event, source);
+        }else{
+            return Promise.reject("Missing/invalid name field");
+        }
 
-        // let params = {
-        //     TableName: TABLE,
-        //     Key: {
-        //         "id": eventId,
-        //     }
-        // };
+        // var token;
         //
-        // return docClient.get(params).promise().then(item => {
-        //     if (item.Item !== undefined) {
-        //         return item.Item;
-        //     } else {
-        //         return null
+        // particle.login({username: username, password: password}).then(
+        //     function (data) {
+        //         console.log('API call completed on promise resolve: ', data.body.access_token);
+        //         oken = data.body.access_token;
+        //     },
+        //     function (err) {
+        //         console.log('API call completed on promise fail: ', err);
         //     }
-        // });
+        // );
+        // return Promise.resolve("asd");
+        return execute(node.id, "A.setStatus", "IDLE")
     }
-    // save: function (event) {
-    //     console.log("Savings event: ", event);
-    //
-    //     let params = {
-    //         TableName:TABLE,
-    //         Item: event
-    //     };
-    //
-    //     return docClient.put(params).promise().then(item => {
-    //             return event
-    //     });
-    // }
 };
+
+function setAlarmStatus(node, event, source) {
+
+}
+
+function execute(nodeId, functionName, functionParam) {
+    return particle.login({username: username, password: password}).then(data => {
+        let token = data.body.access_token;
+        return particle.callFunction({deviceId: nodeId, name: functionName, argument: functionParam, auth: token});
+    });
+}
