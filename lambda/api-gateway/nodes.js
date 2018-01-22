@@ -1,4 +1,5 @@
 const nodeRepository = require('repository/node-repository');
+const nodeGateway = require('gateway/node-gateway');
 const validations = require('validations');
 
 
@@ -9,6 +10,8 @@ exports.handler = function (event, context, callback) {
         handleFind(event, context, callback);
     } else if (isReadRequest(event)) {
         handleRead(event, context, callback);
+    } else if (isActionRequest(event)) {
+        handleAction(event, context, callback);
     } else {
         callback(null, {
             statusCode: '400',
@@ -25,6 +28,10 @@ exports.handler = function (event, context, callback) {
 
     function isReadRequest(event) {
         return (event.resource === "/nodes/{id}") && (event.httpMethod === "GET");
+    }
+
+    function isActionRequest(event) {
+        return (event.resource === "/nodes/{id}/actions") && (event.httpMethod === "POST");
     }
 
     function handleFind(event, context, callback) {
@@ -74,6 +81,64 @@ exports.handler = function (event, context, callback) {
                                 'Content-Type': 'application/json',
                             },
                         });
+                    } else {
+                        callback(null, {
+                            statusCode: '204',
+                            body: JSON.stringify({'message': "Node not found with id: " + id}),
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                    }
+                })
+                .catch(e => {
+                        callback(null, {
+                            statusCode: '500',
+                            body: JSON.stringify({'message': e.stack}),
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                    }
+                );
+        } else {
+            callback(null, {
+                statusCode: '400',
+                body: JSON.stringify({'message': "Invalid id: " + id}),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        }
+    }
+
+    function handleAction(event, context, callback) {
+        let id = event.pathParameters.id;
+
+        if (validations.validString(id)) {
+            nodeRepository.read(id)
+                .then(node => {
+                    if (node != null) {
+                        nodeGateway.run(node, event)
+                            .then(result => {
+                                callback(null, {
+                                    statusCode: '200',
+                                    body: JSON.stringify(result),
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                });
+                            })
+                            .catch(e => {
+                                    callback(null, {
+                                        statusCode: '500',
+                                        body: JSON.stringify({'message': e.stack}),
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                    });
+                                }
+                            );
                     } else {
                         callback(null, {
                             statusCode: '204',
