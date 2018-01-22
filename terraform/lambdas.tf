@@ -25,7 +25,9 @@ resource "aws_lambda_function" "domo-slave-api-gateway-nodes" {
 
   environment {
     variables = {
-      SNS_ARN = "${aws_sns_topic.events.arn}"
+      SNS_ARN = "${aws_sns_topic.events.arn}",
+      PARTICLE_API_USER = "${var.particle_api_user}",
+      PARTICLE_API_PASSWORD = "${var.particle_api_password}"
     }
   }
 }
