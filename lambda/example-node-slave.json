@@ -1,0 +1,59 @@
+{
+  "id": "1234567890",
+  "master": "30002b000547343233323032",
+  "installations": [
+    "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
+  ],
+  "lastPing": "2018-01-25T18:12:34Z",
+  "modules": {
+    "alarm": {
+      "pins": {
+        "A0": {
+          "activations": {
+            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2012-12-12T22:00:28",
+            "value": "135"
+          },
+          "id": "A0",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Sabotage",
+          "readings": {
+            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2018-01-25T18:35:46Z",
+            "value": 1
+          },
+          "threshold": 0,
+          "type": "SABOTAGE"
+        },
+        "A1": {
+          "activations": {
+            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2018-01-25T18:26:00Z",
+            "value": 0
+          },
+          "id": "A2",
+          "input": "ANALOG",
+          "mode": "HIGH",
+          "name": "Termometer",
+          "readings": {
+            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2018-01-25T18:35:46Z",
+            "value": 1
+          },
+          "threshold": 50,
+          "type": "SAFETY",
+          "unit": "ºC"
+        }
+      },
+      "status": {
+        "id": "594d2c5e-f522-11e7-8c3f-9a214cf093ae",
+        "source": "lol",
+        "timestamp": "2018-01-25T18:28:40Z",
+        "value": "IDLE"
+      }
+    }
+  },
+  "name": "Cocina",
+  "type": "PHOTON"
+}
