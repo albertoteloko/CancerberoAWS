@@ -1,5 +1,6 @@
 const Particle = require('particle-api-js');
 const validations = require('validations');
+const nodeRepository = require('../repository/node-repository');
 
 const username = process.env.PARTICLE_API_USER;
 const password = process.env.PARTICLE_API_PASSWORD;
@@ -34,6 +35,26 @@ module.exports = {
 
 function alarmKey(node, source) {
     if (node.modules.alarm) {
+        if (isSlave(node)) {
+            return nodeRepository.read(node.master).then(masterNode => {
+                if (masterNode != null) {
+                    console.log("modules", masterNode.modules);
+                    if (masterNode.modules['ethernet-gateway']) {
+                        const ethernetGateway = masterNode.modules['ethernet-gateway'];
+                        if (ethernetGateway.nodes[node.id]) {
+return Promise.reject("asdasd")
+                        } else {
+                            return Promise.reject("Master node " + node.master + " does not have the IP of node " + node.id);
+                        }
+                    } else {
+                        return Promise.reject("Master node " + node.master + " does not have an ethernet gateway");
+                    }
+                } else {
+                    return Promise.reject("Master node " + node.master + " not found");
+                }
+
+            });
+        }
         return login().then(token => {
             return getVar(node.id, "A.status", token).then(status => {
                 console.log("Status", status);
@@ -45,10 +66,13 @@ function alarmKey(node, source) {
                 }
             })
         });
-
     } else {
         return Promise.reject({"code": 412, "message": "Node doesn't have any alarm module"});
     }
+}
+
+function isSlave(node) {
+    return (node.master !== undefined) && (node.type !== 'PHOTON') && (node.type !== 'ELECTRON')
 }
 
 function login() {
