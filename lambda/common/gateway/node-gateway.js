@@ -33,42 +33,71 @@ module.exports = {
     }
 };
 
-function alarmKey(node, source) {
-    if (node.modules.alarm) {
-        if (isSlave(node)) {
-            return nodeRepository.read(node.master).then(masterNode => {
-                if (masterNode != null) {
-                    console.log("modules", masterNode.modules);
-                    if (masterNode.modules['ethernet-gateway']) {
-                        const ethernetGateway = masterNode.modules['ethernet-gateway'];
-                        if (ethernetGateway.nodes[node.id]) {
-return Promise.reject("asdasd")
-                        } else {
-                            return Promise.reject("Master node " + node.master + " does not have the IP of node " + node.id);
-                        }
+function handleNode(node, onMasterNode, onSlave) {
+    if (isSlave(node)) {
+        return nodeRepository.read(node.master).then(masterNode => {
+            if (masterNode != null) {
+                console.log("modules", masterNode.modules);
+                if (masterNode.modules['ethernet-gateway']) {
+                    const ethernetGateway = masterNode.modules['ethernet-gateway'];
+                    if (ethernetGateway.nodes[node.id]) {
+                        const ip = ethernetGateway.nodes[node.id];
+                        return onSlave(ip, node);
                     } else {
-                        return Promise.reject("Master node " + node.master + " does not have an ethernet gateway");
+                        return Promise.reject("Master node " + node.master + " does not have the IP of node " + node.id);
                     }
                 } else {
-                    return Promise.reject("Master node " + node.master + " not found");
+                    return Promise.reject("Master node " + node.master + " does not have an ethernet gateway");
                 }
+            } else {
+                return Promise.reject("Master node " + node.master + " not found");
+            }
 
-            });
-        }
-        return login().then(token => {
-            return getVar(node.id, "A.status", token).then(status => {
-                console.log("Status", status);
-                let sourceString = source ? "," + source : "";
-                if (status === "IDLE") {
-                    return execute(node.id, "A.status", "ACTIVATING" + sourceString, token).then(toStatus);
-                } else {
-                    return execute(node.id, "A.status", "IDLE" + sourceString, token).then(toStatus);
-                }
-            })
         });
+    } else {
+        return onMasterNode(node);
+    }
+}
+
+function alarmKey(node, source) {
+    if (node.modules.alarm) {
+        return handleNode(
+            function (node) {
+                return login().then(token => {
+                    return getVar(node.id, "A.status", token).then(status => {
+                        console.log("Status", status);
+                        return setNodeStatus(node.id, null, status, source, token);
+                    })
+                });
+            },
+            function (ip, node) {
+                return login().then(token => {
+                    let status = node.modules.alarm.status.value;
+                    console.log("Status", status);
+                    return setNodeStatus(node.master, ip, status, source, token);
+                });
+            }
+        );
     } else {
         return Promise.reject({"code": 412, "message": "Node doesn't have any alarm module"});
     }
+}
+
+function setNodeStatus(id, ip, currentStatus, source, sharedToken) {
+    let promise = sharedToken ? Promise.resolve(sharedToken) : login();
+    return promise.then(token => {
+        let ipString = validString(ip) ? ip + "@" : "";
+        let sourceString = validString(source) ? "," + source : "";
+        if (currentStatus === "IDLE") {
+            return execute(node.id, "A.status", ipString + "ACTIVATING" + sourceString, token).then(toStatus);
+        } else {
+            return execute(node.id, "A.status", ipString + "IDLE" + sourceString, token).then(toStatus);
+        }
+    });
+}
+
+function validString(value) {
+    return (value !== undefined) && (value != null)
 }
 
 function isSlave(node) {
