@@ -120,7 +120,6 @@ exports.handler = function (event, context, callback) {
                 .then(node => {
                     if (node != null) {
                         let action = (event.body !== undefined) ? JSON.parse(event.body) : event;
-                        console.log("action", action);
                         nodeGateway.run(node, action)
                             .then(result => {
                                 callback(null, {

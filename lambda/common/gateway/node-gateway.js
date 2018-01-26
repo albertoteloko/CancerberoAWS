@@ -16,20 +16,6 @@ module.exports = {
         } else {
             return Promise.reject({"code": 400, "message": "Missing/invalid name field"});
         }
-
-        // var token;
-        //
-        // particle.login({username: username, password: password}).then(
-        //     function (data) {
-        //         console.log('API call completed on promise resolve: ', data.body.access_token);
-        //         oken = data.body.access_token;
-        //     },
-        //     function (err) {
-        //         console.log('API call completed on promise fail: ', err);
-        //     }
-        // );
-        // return Promise.resolve("asd");
-
     }
 };
 
@@ -37,7 +23,6 @@ function handleNode(node, onMasterNode, onSlave) {
     if (isSlave(node)) {
         return nodeRepository.read(node.master).then(masterNode => {
             if (masterNode != null) {
-                console.log("modules", masterNode.modules);
                 if (masterNode.modules['ethernet-gateway']) {
                     const ethernetGateway = masterNode.modules['ethernet-gateway'];
                     if (ethernetGateway.nodes[node.id]) {
@@ -60,9 +45,11 @@ function handleNode(node, onMasterNode, onSlave) {
 }
 
 function alarmKey(node, source) {
-    if (node.modules.alarm) {
+    if (nodeContainsAlarm(node)) {
         return handleNode(
+            node,
             function (node) {
+                console.log("In master!", node);
                 return login().then(token => {
                     return getVar(node.id, "A.status", token).then(status => {
                         console.log("Status", status);
@@ -71,6 +58,7 @@ function alarmKey(node, source) {
                 });
             },
             function (ip, node) {
+                console.log("In slave!", ip, node);
                 return login().then(token => {
                     let status = node.modules.alarm.status.value;
                     console.log("Status", status);
@@ -83,15 +71,22 @@ function alarmKey(node, source) {
     }
 }
 
+function nodeContainsAlarm(node) {
+    return defined(node) && defined(node.modules) && defined(node.modules.alarm)
+}
+function defined(value) {
+    return (value !== undefined) && (value != null)
+}
+
 function setNodeStatus(id, ip, currentStatus, source, sharedToken) {
     let promise = sharedToken ? Promise.resolve(sharedToken) : login();
     return promise.then(token => {
         let ipString = validString(ip) ? ip + "@" : "";
         let sourceString = validString(source) ? "," + source : "";
         if (currentStatus === "IDLE") {
-            return execute(node.id, "A.status", ipString + "ACTIVATING" + sourceString, token).then(toStatus);
+            return execute(id, "A.status", ipString + "ACTIVATING" + sourceString, token).then(toStatusResult);
         } else {
-            return execute(node.id, "A.status", ipString + "IDLE" + sourceString, token).then(toStatus);
+            return execute(id, "A.status", ipString + "IDLE" + sourceString, token).then(toStatusResult);
         }
     });
 }
@@ -131,25 +126,29 @@ function getVar(nodeId, varName, sharedToken) {
     });
 }
 
-function toStatus(number) {
+function toStatusResult(number) {
     switch (number) {
+        case -3:
+            return Promise.reject({"code": 500, "message": "Ethernet gateway disabled"});
         case -2:
-            return "UNCHANGED";
+            return Promise.reject({"code": 412, "message": "Status unchanged"});
         case -1:
-            return "UNKNOWN";
+            return Promise.reject({"code": 400, "message": "Status unknown"});
         case 1:
-            return "IDLE";
+            return Promise.resolve({"status": "IDLE"});
         case 2:
-            return "ACTIVATING";
+            return Promise.resolve({"status": "ACTIVATING"});
         case 3:
-            return "ACTIVATED";
+            return Promise.resolve({"status": "ACTIVATED"});
         case 4:
-            return "SUSPICIOUS";
+            return Promise.resolve({"status": "SUSPICIOUS"});
         case 5:
-            return "ALARMED";
+            return Promise.resolve({"status": "ALARMED"});
         case 6:
-            return "SAFETY";
+            return Promise.resolve({"status": "SAFETY"});
         case 7:
-            return "SABOTAGE";
+            return Promise.resolve({"status": "SABOTAGE"});
+        default:
+            return Promise.reject({"code": 500, "message": "Unknown error: " + number});
     }
 }
