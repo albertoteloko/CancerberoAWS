@@ -59,7 +59,7 @@ module.exports = {
             return Promise.reject({"code": 412, "message": "Node doesn't have any card module"});
         }
     }
-)
+};
 
 function addCardEntry(id, ip, cardId, source, sharedToken) {
     let promise = sharedToken ? Promise.resolve(sharedToken) : common.login();
