@@ -11,7 +11,9 @@ module.exports = {
         if (validations.validString(validation)) {
             return Promise.reject({"code": 400, "message": validation});
         } else {
-            if (action.type === "alarmKey") {
+            if (action.type === "setup") {
+                return setup(node, source);
+            } else if (action.type === "alarmKey") {
                 return keyGateway.alarmKey(node, source);
             } else if (action.type === "addCard") {
                 return cardGateway.addCard(node, action.name, action.cardId, source);
@@ -23,3 +25,7 @@ module.exports = {
         }
     }
 };
+
+function setup(node, source) {
+
+}
