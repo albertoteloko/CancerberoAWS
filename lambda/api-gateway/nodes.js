@@ -120,6 +120,7 @@ exports.handler = function (event, context, callback) {
                 .then(node => {
                     if (node != null) {
                         let action = (event.body !== undefined) ? JSON.parse(event.body) : event;
+                        action.timestamp = new Date().toString();
                         nodeGateway.run(node, action)
                             .then(result => {
                                 callback(null, {

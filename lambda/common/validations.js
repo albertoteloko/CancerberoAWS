@@ -17,6 +17,39 @@ module.exports = {
     validBoolean(value) {
         return (value !== undefined) && (value !== null) && (typeof(value) === "boolean")
     },
+    validateAction(event) {
+        if (!this.validString(event.type)) {
+            return "Missing/Invalid type param";
+        } else if (!this.validDate(event.timestamp)) {
+            return "Missing/Invalid timestamp param";
+        }
+
+        if (event.type === "alarmKey") {
+            return this.validateAlarmKeyAction(event);
+        } else if (event.type === "addCard") {
+            return this.validateAddCardAction(event);
+        } else if (event.type === "removeCard") {
+            return this.validateRemoveCardAction(event);
+        }
+        return null;
+    },
+    validateAlarmKeyAction(event) {
+        return null;
+    },
+    validateAddCardAction(event) {
+        if (!this.validString(event.name)) {
+            return "Missing/Invalid name param";
+        } else if (!this.validString(event.cardId)) {
+            return "Missing/Invalid cardId param";
+        }
+        return null;
+    },
+    validateRemoveCardAction(event) {
+        if (!this.validString(event.cardId)) {
+            return "Missing/Invalid cardId param";
+        }
+        return null;
+    },
     validateEvent(event) {
         if (!this.validString(event.type)) {
             return "Missing/Invalid type param";

@@ -3,7 +3,7 @@
   "installations": [
     "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
   ],
-  "lastPing": "2018-01-25T18:12:34Z",
+  "lastPing": "2018-01-27T17:25:34Z",
   "modules": {
     "alarm": {
       "pins": {
@@ -48,21 +48,28 @@
       "status": {
         "id": "594d2c5e-f522-11e7-8c3f-9a214cf093ae",
         "source": "lol",
-        "timestamp": "2018-01-25T18:28:40Z",
+        "timestamp": "2018-01-27T15:44:21Z",
         "value": "IDLE"
       }
     },
     "ethernet-gateway": {
-      "spi": "SPI1",
-      "ss": "D5",
-      "mac": "DE:AD:BE:EF:FE:ED",
       "ip": "192.168.1.66",
-      "port": 6969,
+      "mac": "DE:AD:BE:EF:FE:ED",
       "nodes": {
         "1234567890": "192.168.1.70"
+      },
+      "port": 6969,
+      "spi": "SPI1",
+      "ss": "D5"
+    },
+    "card": {
+      "spi": "SPI1",
+      "ss": "D5",
+      "entries": {
+        "15:EE:9B:BB": "Guimo"
       }
     }
   },
-  "name": "Cuadra",
+  "name": "Casa",
   "type": "PHOTON"
 }
