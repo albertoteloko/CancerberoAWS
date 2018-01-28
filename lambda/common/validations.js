@@ -2,6 +2,9 @@ const ALARM_STATUSES = ["IDLE", "ACTIVATING", "ACTIVATED", "SUSPICIOUS", "ALARME
 const LOG_LEVELS = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
 
 module.exports = {
+    validArray(value) {
+        return (value !== undefined) && (value !== null) && (Array.isArray(value));
+    },
     validString(value) {
         return (value !== undefined) && (value !== null) && (value !== '');
     },
@@ -30,6 +33,8 @@ module.exports = {
             return this.validateAddCardAction(event);
         } else if (event.type === "removeCard") {
             return this.validateRemoveCardAction(event);
+        } else if (event.type === "setup") {
+            return this.validateSetupAction(event);
         }
         return null;
     },
@@ -41,6 +46,12 @@ module.exports = {
             return "Missing/Invalid name param";
         } else if (!this.validString(event.cardId)) {
             return "Missing/Invalid cardId param";
+        }
+        return null;
+    },
+    validateSetupAction(event) {
+        if (!this.validArray(event.modules)) {
+            return "Missing/Invalid modules param";
         }
         return null;
     },

@@ -37,6 +37,9 @@ module.exports = {
     nodeContainsCard: function (node) {
         return this.defined(node) && this.defined(node.modules) && this.defined(node.modules.card)
     },
+    nodeContainsEthernetGateway: function (node) {
+        return this.defined(node) && this.defined(node.modules) && this.defined(node.modules['ethernet-gateway'])
+    },
     defined: function (value) {
         return (value !== undefined) && (value != null)
     },

@@ -1,5 +1,6 @@
 const cardGateway = require('./card-gateway');
 const keyGateway = require('./key-gateway');
+const setupGateway = require('./setup-gateway');
 const validations = require('../validations');
 
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
             return Promise.reject({"code": 400, "message": validation});
         } else {
             if (action.type === "setup") {
-                return setup(node, source);
+                return setupGateway.setup(node, action.modules, source);
             } else if (action.type === "alarmKey") {
                 return keyGateway.alarmKey(node, source);
             } else if (action.type === "addCard") {
@@ -25,7 +26,3 @@ module.exports = {
         }
     }
 };
-
-function setup(node, source) {
-
-}

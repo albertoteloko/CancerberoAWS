@@ -3,9 +3,11 @@
   "installations": [
     "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
   ],
-  "lastPing": "2018-01-27T17:25:34Z",
+  "lastPing": "2018-01-28T10:38:19Z",
   "modules": {
     "alarm": {
+      "activatingTime": 15,
+      "suspiciousTime": 15,
       "pins": {
         "A0": {
           "activations": {
@@ -16,14 +18,14 @@
           "id": "A0",
           "input": "DIGITAL",
           "mode": "LOW",
-          "name": "Sabotage",
+          "name": "Main Door",
           "readings": {
             "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
             "timestamp": "2018-01-25T18:35:46Z",
             "value": 1
           },
           "threshold": 0,
-          "type": "SABOTAGE"
+          "type": "SENSOR"
         },
         "A1": {
           "activations": {
@@ -31,26 +33,51 @@
             "timestamp": "2018-01-25T18:26:00Z",
             "value": 0
           },
-          "id": "A2",
-          "input": "ANALOG",
-          "mode": "HIGH",
-          "name": "Termometer",
+          "id": "A1",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Llave",
           "readings": {
             "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
             "timestamp": "2018-01-25T18:35:46Z",
             "value": 1
           },
-          "threshold": 50,
-          "type": "SAFETY",
+          "threshold": 0,
+          "type": "KEY"
+        },
+        "A2": {
+          "activations": {
+            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2012-12-12T22:00:28",
+            "value": "135"
+          },
+          "id": "A2",
+          "input": "ANALOG",
+          "mode": "LOW",
+          "name": "Thermometer",
+          "readings": {
+            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
+            "timestamp": "2018-01-25T18:35:46Z",
+            "value": 1
+          },
+          "threshold": 56,
+          "type": "SENSOR",
           "unit": "ºC"
         }
       },
       "status": {
         "id": "594d2c5e-f522-11e7-8c3f-9a214cf093ae",
-        "source": "lol",
-        "timestamp": "2018-01-27T15:44:21Z",
+        "source": "C:04:EF:F3:E2:B9:29:80",
+        "timestamp": "2018-01-27T20:05:54Z",
         "value": "IDLE"
       }
+    },
+    "card": {
+      "entries": {
+        "15:EE:9B:BB": "Guimo"
+      },
+      "spi": "SPI1",
+      "ss": "D5"
     },
     "ethernet-gateway": {
       "ip": "192.168.1.66",
@@ -61,13 +88,6 @@
       "port": 6969,
       "spi": "SPI1",
       "ss": "D5"
-    },
-    "card": {
-      "spi": "SPI1",
-      "ss": "D5",
-      "entries": {
-        "15:EE:9B:BB": "Guimo"
-      }
     }
   },
   "name": "Casa",
