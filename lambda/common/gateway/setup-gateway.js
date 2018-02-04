@@ -7,7 +7,8 @@ module.exports = {
                 return Promise.all([
                     clearNode(node, token),
                     setupCard(node, token),
-                    setupAlarm(node, token)
+                    setupAlarm(node, token),
+                    setupEthernetGateway(node, token)
                 ])
             });
         } else {
@@ -21,7 +22,7 @@ module.exports = {
                     actions.push(clearCard(node, token));
                     actions.push(setupCard(node, token));
                 }
-                if (containsModule(modules, "card")) {
+                if (containsModule(modules, "ethernet-gateway")) {
                     actions.push(clearEthernetGateway(node, token));
                     actions.push(setupEthernetGateway(node, token));
                 }
@@ -141,10 +142,10 @@ function setupCard(node, token) {
 function setupCardInternal(nodeId, cardModule, prefix, token) {
     let promises = [];
 
-    let alarmString = toCardSetupString(cardModule);
+    let setupString = toCardSetupString(cardModule);
 
-    promises.push(common.execute(nodeId, "C.enable", prefix + alarmString, token).then(r => {
-        return {"step": "card-setup", "result": r, "setupLine": alarmString}
+    promises.push(common.execute(nodeId, "C.enable", prefix + setupString, token).then(r => {
+        return {"step": "card-setup", "result": r, "setupLine": setupString}
     }));
 
     for (let cardId in cardModule.entries) {
@@ -164,10 +165,10 @@ function setupEthernetGateway(node, token) {
         return common.handleNode(
             node,
             function (node) {
-                return setupCardInternal(node.id, node.modules['ethernet-gateway'], "", token);
+                return setupEthernetGatewayInternal(node.id, node.modules['ethernet-gateway'], "", token);
             },
             function (ip, node) {
-                return setupCardInternal(node.master, node.modules['ethernet-gateway'], ip + "@", token);
+                return setupEthernetGatewayInternal(node.master, node.modules['ethernet-gateway'], ip + "@", token);
             }
         ).then(r => {
             return {"step": "card-gateway", "result": r}
@@ -175,6 +176,14 @@ function setupEthernetGateway(node, token) {
     } else {
         return Promise.resolve({"step": "card-gateway", "result": "Module disabled"})
     }
+}
+
+function setupEthernetGatewayInternal(nodeId, cardModule, prefix, token) {
+    let setupString = toEthernetGatewaySetupString(cardModule);
+
+    return common.execute(nodeId, "EG.enable", prefix + setupString, token).then(r => {
+        return {"step": "ethernet-gateway-setup", "result": r, "setupLine": setupString}
+    });
 }
 
 function toAlarmString(node) {
@@ -195,6 +204,10 @@ function toAlarmString(node) {
 
 function toCardSetupString(cardModule) {
     return cardModule.spi + "|" + cardModule.ss;
+}
+
+function toEthernetGatewaySetupString(module) {
+    return module.spi + "|" + module.ss + "|" + module.mac + "|" + module.ip + "|" + module.port;
 }
 
 function getType(input) {
@@ -230,45 +243,5 @@ function getMode(input) {
         return "L";
     } else {
         return input;
-    }
-}
-
-function setNodeStatus(id, ip, currentStatus, source, sharedToken) {
-    let promise = sharedToken ? Promise.resolve(sharedToken) : common.login();
-    return promise.then(token => {
-        let ipString = common.defined(ip) ? ip + "@" : "";
-        let sourceString = common.defined(source) ? "," + source : "";
-        if (currentStatus === "IDLE") {
-            return common.execute(id, "A.status", ipString + "ACTIVATING" + sourceString, token).then(toStatusResult);
-        } else {
-            return common.execute(id, "A.status", ipString + "IDLE" + sourceString, token).then(toStatusResult);
-        }
-    });
-}
-
-function toStatusResult(number) {
-    switch (number) {
-        case -3:
-            return Promise.reject({"code": 500, "message": "Ethernet gateway disabled"});
-        case -2:
-            return Promise.reject({"code": 412, "message": "Status unchanged"});
-        case -1:
-            return Promise.reject({"code": 400, "message": "Status unknown"});
-        case 1:
-            return Promise.resolve({"status": "IDLE"});
-        case 2:
-            return Promise.resolve({"status": "ACTIVATING"});
-        case 3:
-            return Promise.resolve({"status": "ACTIVATED"});
-        case 4:
-            return Promise.resolve({"status": "SUSPICIOUS"});
-        case 5:
-            return Promise.resolve({"status": "ALARMED"});
-        case 6:
-            return Promise.resolve({"status": "SAFETY"});
-        case 7:
-            return Promise.resolve({"status": "SABOTAGE"});
-        default:
-            return Promise.reject({"code": 500, "message": "Unknown error: " + number});
     }
 }
