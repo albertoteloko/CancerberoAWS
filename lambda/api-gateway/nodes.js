@@ -119,7 +119,9 @@ exports.handler = function (event, context, callback) {
             nodeRepository.read(id)
                 .then(node => {
                     if (node != null) {
+                        console.info("Event body", event);
                         let action = (event.body !== undefined) ? JSON.parse(event.body) : event;
+                        console.info("Input action", action);
                         action.timestamp = new Date().toString();
                         nodeGateway.run(node, action)
                             .then(result => {
@@ -132,6 +134,7 @@ exports.handler = function (event, context, callback) {
                                 });
                             })
                             .catch(e => {
+                                    console.error("Error in action", e);
                                     callback(null, {
                                         statusCode: e.code ? e.code : 500,
                                         body: JSON.stringify({'message': e.message ? e.message : e}),
@@ -152,6 +155,7 @@ exports.handler = function (event, context, callback) {
                     }
                 })
                 .catch(e => {
+                        console.error("General action", e);
                         callback(null, {
                             statusCode: '500',
                             body: JSON.stringify({'message': e.stack}),

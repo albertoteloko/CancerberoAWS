@@ -9,7 +9,8 @@ resource "aws_lambda_function" "domo-slave-api-gateway-events" {
 
   environment {
     variables = {
-      SNS_ARN = "${aws_sns_topic.events.arn}"
+      SNS_ARN = "${aws_sns_topic.events.arn}",
+      ACCOUNT_ID = "${var.account_id}"
     }
   }
 }

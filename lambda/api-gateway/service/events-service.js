@@ -1,6 +1,15 @@
 const nodeRepository = require('../repository/node-repository');
 const eventRepository = require('../repository/event-repository');
 
+const AWS = require('aws-sdk');
+
+
+const region = process.env.AWS_REGION;
+const accountId = process.env.ACCOUNT_ID;
+const SNS_BASE = "arn:aws:sns:" + region + ":" + accountId + ":endpoint/GCM/Cancerbero/";
+
+AWS.config.region = region;
+
 module.exports = {
     handle(event) {
         if (event.type === 'ping') {
@@ -86,6 +95,7 @@ function handleAlarmStatusChanged(event) {
                 return Promise.reject("Node " + nodeId + " does not change its status");
             }
             setAlarmStatus(alarm, event);
+            notifyStatusChange(node.installationId, event.value);
             return nodeRepository.save(node).then(result => {
                 return eventRepository.save(event);
             });
@@ -93,6 +103,41 @@ function handleAlarmStatusChanged(event) {
             return Promise.reject("Node " + nodeId + " not found")
         }
     });
+}
+
+function notifyStatusChange(installationId, value) {
+    if (value === 'ALARMED') {
+        let sns = new AWS.SNS();
+
+        let message = {
+            "data": {
+                "title": "Important announcement",
+                "message": "Hello you!",
+                "url": "www.amazon.com"
+            },
+            "time_to_live": 3600,
+            "collapse_key": "deals"
+        };
+
+        console.log("SNS event", event);
+
+        console.info({
+            Message: JSON.stringify({"GCM": JSON.stringify(message)}),
+            TopicArn: SNS_BASE + installationId
+        });
+
+        sns.publish({
+            Message: JSON.stringify({"GCM": JSON.stringify(message)}),
+            TopicArn: SNS_BASE + installationId
+        }, function (err, data) {
+            if (err) {
+                console.log(err.stack);
+                return;
+            }
+            console.log('push sent');
+            console.log(data);
+        });
+    }
 }
 
 function handleLog(event) {
