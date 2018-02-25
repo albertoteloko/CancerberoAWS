@@ -47,6 +47,10 @@ resource "aws_iam_role_policy" "domo_slave_lambda_policy" {
             "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:DescribeStream",
+                "dynamodb:ListStreams",
                 "dynamodb:Scan",
                 "dynamodb:Query",
                 "dynamodb:DescribeTable",

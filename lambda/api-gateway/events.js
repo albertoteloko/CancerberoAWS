@@ -37,6 +37,7 @@ exports.handler = function (event, context, callback) {
                 },
             });
         }, message => {
+            console.error("Unable to process", message);
             callback(null, {
                 statusCode: '412',
                 body: JSON.stringify({'message': message}),
@@ -46,6 +47,7 @@ exports.handler = function (event, context, callback) {
             });
         })
             .catch(e => {
+                    console.error("Unable to process", e);
                     callback(null, {
                         statusCode: '500',
                         body: JSON.stringify({'message': e.stack}),

@@ -49,3 +49,20 @@ resource "aws_lambda_function" "domo-slave-api-gateway-installations" {
     }
   }
 }
+
+resource "aws_lambda_function" "domo-slave-event-handler" {
+  depends_on = ["aws_sns_topic.events"]
+  filename         = "../lambda/domo-slave-event-handler.zip"
+  function_name    = "domo-slave-api-event-handler"
+  role             = "${aws_iam_role.domo_slave_lambda.arn}"
+  handler          = "index.handler"
+  source_code_hash = "${base64sha256(file("../lambda/domo-slave-event-handler.zip"))}"
+  runtime          = "nodejs6.10"
+
+  environment {
+    variables = {
+      SNS_ARN = "${aws_sns_topic.events.arn}",
+      ACCOUNT_ID = "${var.account_id}"
+    }
+  }
+}
