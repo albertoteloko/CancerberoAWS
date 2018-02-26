@@ -1,16 +1,15 @@
 const validations = require('validations');
-const eventService = require('service/events-service');
-
+const eventRepository = require('repository/event-repository');
 
 exports.handler = function (event, context, callback) {
-    console.log("Input", event);
-    console.log("Context", context);
+    // console.log("Input", event);
+    // console.log("Context", context);
 
     let deviceEvent = (event.body !== undefined) ? JSON.parse(event.body) : event;
     if (deviceEvent.data !== undefined) {
         deviceEvent = JSON.parse(deviceEvent.data);
     }
-    console.log("deviceEvent", deviceEvent);
+    // console.log("deviceEvent", deviceEvent);
 
     let validation = validations.validateEvent(deviceEvent);
 
@@ -28,7 +27,7 @@ exports.handler = function (event, context, callback) {
             deviceEvent.id = context.awsRequestId;
         }
         console.log("Event", deviceEvent);
-        eventService.handle(deviceEvent).then(event => {
+        eventRepository.save(deviceEvent).then(event => {
             callback(null, {
                 statusCode: '200',
                 body: JSON.stringify(event),
@@ -45,18 +44,17 @@ exports.handler = function (event, context, callback) {
                     'Content-Type': 'application/json',
                 },
             });
-        })
-            .catch(e => {
-                    console.error("Unable to process", e);
-                    callback(null, {
-                        statusCode: '500',
-                        body: JSON.stringify({'message': e.stack}),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                }
-            );
+        }).catch(e => {
+                console.error("Unable to process", e);
+                callback(null, {
+                    statusCode: '500',
+                    body: JSON.stringify({'message': e.stack}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            }
+        );
     }
 };
 

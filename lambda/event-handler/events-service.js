@@ -1,5 +1,4 @@
-const nodeRepository = require('../repository/node-repository');
-const eventRepository = require('../repository/event-repository');
+const nodeRepository = require('repository/node-repository');
 
 const AWS = require('aws-sdk');
 
@@ -33,9 +32,7 @@ function handlePing(event) {
 
         if (node != null) {
             node.lastPing = event.timestamp;
-            return nodeRepository.save(node).then(result => {
-                return eventRepository.save(event);
-            });
+            return nodeRepository.save(node);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
         }
@@ -50,9 +47,7 @@ function handlePinActivated(event) {
             if (pin !== undefined) {
                 setPinActivations(pin, event);
                 setPinReading(pin, event);
-                return nodeRepository.save(node).then(result => {
-                    return eventRepository.save(event);
-                });
+                return nodeRepository.save(node);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
             }
@@ -72,9 +67,7 @@ function handlePinChanged(event) {
                     return Promise.reject("Node " + nodeId + " and pin " + event.pinId + " does not change its value");
                 }
                 setPinReading(pin, event);
-                return nodeRepository.save(node).then(result => {
-                    return eventRepository.save(event);
-                });
+                return nodeRepository.save(node);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
             }
@@ -94,9 +87,7 @@ function handleAlarmStatusChanged(event) {
             }
             setAlarmStatus(alarm, event);
             notifyStatusChange(node.topics, event.value);
-            return nodeRepository.save(node).then(result => {
-                return eventRepository.save(event);
-            });
+            return nodeRepository.save(node);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
         }
@@ -143,14 +134,7 @@ function publish(topic, message) {
 }
 
 function handleLog(event) {
-    const nodeId = event.nodeId;
-    return nodeRepository.read(nodeId).then(node => {
-        if (node != null) {
-            return eventRepository.save(event);
-        } else {
-            return Promise.reject("Node " + nodeId + " not found")
-        }
-    });
+    return Promise.resolve(event.nodeId + " - " + event.level + " - " + event.class + " - " + event.message);
 }
 
 
