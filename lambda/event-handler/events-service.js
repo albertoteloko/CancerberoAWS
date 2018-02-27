@@ -27,16 +27,7 @@ module.exports = {
 };
 
 function handlePing(event) {
-    const nodeId = event.nodeId;
-    return nodeRepository.read(nodeId).then(node => {
-
-        if (node != null) {
-            node.lastPing = event.timestamp;
-            return nodeRepository.save(node);
-        } else {
-            return Promise.reject("Node " + nodeId + " not found")
-        }
-    });
+    return nodeRepository.updatePing(event.nodeId, event.timestamp);
 }
 
 function handlePinActivated(event) {
@@ -85,9 +76,8 @@ function handleAlarmStatusChanged(event) {
             if ((alarm.status !== undefined) && (alarm.status.value === event.value)) {
                 return Promise.reject("Node " + nodeId + " does not change its status");
             }
-            setAlarmStatus(alarm, event);
             notifyStatusChange(node.topics, event.value);
-            return nodeRepository.save(node);
+            return nodeRepository.updateAlarmStatus(nodeId, event.value, event.source, event.timestamp);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
         }
@@ -152,13 +142,4 @@ function setPinReading(pin, event) {
     }
     pin.readings.timestamp = event.timestamp;
     pin.readings.value = event.value;
-}
-
-function setAlarmStatus(alarm, event) {
-    if (alarm.status === undefined) {
-        alarm.status = {};
-    }
-    alarm.status.timestamp = event.timestamp;
-    alarm.status.value = event.value;
-    alarm.status.source = event.source;
 }

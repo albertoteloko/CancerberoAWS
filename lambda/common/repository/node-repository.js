@@ -51,5 +51,46 @@ module.exports = {
         return docClient.put(params).promise().then(item => {
             return node
         });
+    },
+    updatePing: function (nodeId, timestamp) {
+        console.log("Savings node ping: ", nodeId, timestamp);
+
+        let params = {
+            TableName: TABLE,
+            Key: {
+                "id": nodeId
+            },
+            UpdateExpression: "set lastPing = :p",
+            ExpressionAttributeValues: {
+                ":p": timestamp
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+
+        return docClient.update(params).promise();
+    },
+    updateAlarmStatus: function (nodeId, value, source, timestamp) {
+        console.log("Savings node status: ", nodeId, value, source, timestamp);
+
+        let params = {
+            TableName: TABLE,
+            Key: {
+                "id": nodeId
+            },
+            UpdateExpression: "set modules.alarm.#S = :s",
+            ExpressionAttributeValues: {
+                ":s": {
+                    'value': value,
+                    'source': source,
+                    'timestamp': timestamp
+                }
+            },
+            ExpressionAttributeNames: {
+                '#S': "status",
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+
+        return docClient.update(params).promise();
     }
 };
