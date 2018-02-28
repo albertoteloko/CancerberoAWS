@@ -92,5 +92,51 @@ module.exports = {
         };
 
         return docClient.update(params).promise();
+    },
+    setPinReading: function (nodeId, pinId, value, timestamp) {
+        console.log("Savings node pin reading: ", nodeId, pinId, value, timestamp);
+
+        let params = {
+            TableName: TABLE,
+            Key: {
+                "id": nodeId
+            },
+            UpdateExpression: "set modules.alarm.pins.#PI.readings = :s",
+            ExpressionAttributeValues: {
+                ":s": {
+                    'value': value,
+                    'timestamp': timestamp
+                }
+            },
+            ExpressionAttributeNames: {
+                '#PI': pinId
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+
+        return docClient.update(params).promise();
+    },
+    setPinActivated: function (nodeId, pinId, value, timestamp) {
+        console.log("Savings node pin activating: ", nodeId, pinId, value, timestamp);
+
+        let params = {
+            TableName: TABLE,
+            Key: {
+                "id": nodeId
+            },
+            UpdateExpression: "set modules.alarm.pins.#PI.readings = :s, modules.alarm.pins.#PI.activations = :s",
+            ExpressionAttributeValues: {
+                ":s": {
+                    'value': value,
+                    'timestamp': timestamp
+                }
+            },
+            ExpressionAttributeNames: {
+                '#PI': pinId
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+
+        return docClient.update(params).promise();
     }
 };

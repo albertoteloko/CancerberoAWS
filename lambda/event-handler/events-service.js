@@ -36,9 +36,7 @@ function handlePinActivated(event) {
         if (node != null) {
             let pin = node.modules.alarm.pins[event.pinId];
             if (pin !== undefined) {
-                setPinActivations(pin, event);
-                setPinReading(pin, event);
-                return nodeRepository.save(node);
+                return nodeRepository.setPinActivated(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
             }
@@ -57,8 +55,8 @@ function handlePinChanged(event) {
                 if ((pin.readings !== undefined) && (pin.readings.value === event.value)) {
                     return Promise.reject("Node " + nodeId + " and pin " + event.pinId + " does not change its value");
                 }
-                setPinReading(pin, event);
-                return nodeRepository.save(node);
+
+                return nodeRepository.setPinReading(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
             }
@@ -125,21 +123,4 @@ function publish(topic, message) {
 
 function handleLog(event) {
     return Promise.resolve(event.nodeId + " - " + event.level + " - " + event.class + " - " + event.message);
-}
-
-
-function setPinActivations(pin, event) {
-    if (pin.activations === undefined) {
-        pin.activations = {};
-    }
-    pin.activations.timestamp = event.timestamp;
-    pin.activations.value = event.value;
-}
-
-function setPinReading(pin, event) {
-    if (pin.readings === undefined) {
-        pin.readings = {};
-    }
-    pin.readings.timestamp = event.timestamp;
-    pin.readings.value = event.value;
 }
