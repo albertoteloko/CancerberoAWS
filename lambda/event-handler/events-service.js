@@ -36,7 +36,7 @@ function handlePinActivated(event) {
         if (node != null) {
             let pin = node.modules.alarm.pins[event.pinId];
             if (pin !== undefined) {
-                notifyEvents(node.topics, event);
+                notifyEvents(node.topic, event);
                 return nodeRepository.setPinActivated(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
@@ -56,7 +56,7 @@ function handlePinChanged(event) {
                 if ((pin.readings !== undefined) && (pin.readings.value === event.value)) {
                     return Promise.reject("Node " + nodeId + " and pin " + event.pinId + " does not change its value");
                 }
-                notifyEvents(node.topics, event);
+                notifyEvents(node.topic, event);
                 return nodeRepository.setPinReading(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
@@ -75,7 +75,7 @@ function handleAlarmStatusChanged(event) {
             if ((alarm.status !== undefined) && (alarm.status.value === event.value)) {
                 return Promise.reject("Node " + nodeId + " does not change its status");
             }
-            notifyEvents(node.topics, event);
+            notifyEvents(node.topic, event);
             return nodeRepository.updateAlarmStatus(nodeId, event.value, event.source, event.timestamp);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
@@ -83,8 +83,8 @@ function handleAlarmStatusChanged(event) {
     });
 }
 
-function notifyEvents(topics, event) {
-    console.info("Sending event", topics, event);
+function notifyEvents(topic, event) {
+    console.info("Sending event", topic, event);
 
     let message = {
         "data": {
@@ -95,7 +95,7 @@ function notifyEvents(topics, event) {
     };
 
     let finalMessage = JSON.stringify({"GCM": JSON.stringify(message)}).replace("\\\\", "\\");
-    topics.forEach(topicArn => publish(topicArn, finalMessage));
+    publish(topic, finalMessage);
 }
 
 function publish(topic, message) {

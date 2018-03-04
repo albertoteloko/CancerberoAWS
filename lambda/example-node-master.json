@@ -1,9 +1,7 @@
 {
   "id": "30002b000547343233323032",
-  "installations": [
-    "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
-  ],
   "lastPing": "2018-01-28T10:38:19Z",
+  "topic": "arn:aws:sns:eu-central-1:598555414863:endpoint/GCM/Cancerbero/5fb0a69f-de51-3b51-ad35-c019f7e591d8",
   "modules": {
     "alarm": {
       "activatingTime": 15,
@@ -11,54 +9,48 @@
       "pins": {
         "A0": {
           "activations": {
-            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2012-12-12T22:00:28",
-            "value": "135"
+            "timestamp": "2018-03-03T16:33:56Z",
+            "value": "0"
           },
           "id": "A0",
           "input": "DIGITAL",
           "mode": "LOW",
           "name": "Main Door",
           "readings": {
-            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:35:46Z",
-            "value": 1
+            "timestamp": "2018-03-04T08:41:29Z",
+            "value": "1"
           },
           "threshold": 0,
           "type": "SENSOR"
         },
         "A1": {
           "activations": {
-            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:26:00Z",
-            "value": 0
+            "timestamp": "2018-03-03T16:34:09Z",
+            "value": "0"
           },
           "id": "A1",
           "input": "DIGITAL",
           "mode": "LOW",
           "name": "Llave",
           "readings": {
-            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:35:46Z",
-            "value": 1
+            "timestamp": "2018-03-03T16:34:09Z",
+            "value": "1"
           },
           "threshold": 0,
           "type": "KEY"
         },
         "A2": {
           "activations": {
-            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2012-12-12T22:00:28",
-            "value": "135"
+            "timestamp": "2018-02-24T19:10:38Z",
+            "value": "69"
           },
           "id": "A2",
           "input": "ANALOG",
           "mode": "LOW",
           "name": "Thermometer",
           "readings": {
-            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:35:46Z",
-            "value": 1
+            "timestamp": "2018-02-24T19:10:38Z",
+            "value": "69"
           },
           "threshold": 56,
           "type": "SENSOR",

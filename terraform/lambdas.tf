@@ -34,22 +34,6 @@ resource "aws_lambda_function" "domo-slave-api-gateway-nodes" {
   }
 }
 
-resource "aws_lambda_function" "domo-slave-api-gateway-installations" {
-  depends_on = ["aws_sns_topic.events"]
-  filename         = "../lambda/domo-slave-api-gateway.zip"
-  function_name    = "domo-slave-api-gateway-installation"
-  role             = "${aws_iam_role.domo_slave_lambda.arn}"
-  handler          = "installations.handler"
-  source_code_hash = "${base64sha256(file("../lambda/domo-slave-api-gateway.zip"))}"
-  runtime          = "nodejs6.10"
-
-  environment {
-    variables = {
-      SNS_ARN = "${aws_sns_topic.events.arn}"
-    }
-  }
-}
-
 resource "aws_lambda_function" "domo-slave-event-handler" {
   depends_on = ["aws_sns_topic.events"]
   filename         = "../lambda/domo-slave-event-handler.zip"
