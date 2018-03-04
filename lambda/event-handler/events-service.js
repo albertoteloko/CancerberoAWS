@@ -36,6 +36,7 @@ function handlePinActivated(event) {
         if (node != null) {
             let pin = node.modules.alarm.pins[event.pinId];
             if (pin !== undefined) {
+                notifyEvents(node.topics, event);
                 return nodeRepository.setPinActivated(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
@@ -55,7 +56,7 @@ function handlePinChanged(event) {
                 if ((pin.readings !== undefined) && (pin.readings.value === event.value)) {
                     return Promise.reject("Node " + nodeId + " and pin " + event.pinId + " does not change its value");
                 }
-
+                notifyEvents(node.topics, event);
                 return nodeRepository.setPinReading(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
@@ -74,7 +75,7 @@ function handleAlarmStatusChanged(event) {
             if ((alarm.status !== undefined) && (alarm.status.value === event.value)) {
                 return Promise.reject("Node " + nodeId + " does not change its status");
             }
-            notifyStatusChange(node.topics, event.value);
+            notifyEvents(node.topics, event);
             return nodeRepository.updateAlarmStatus(nodeId, event.value, event.source, event.timestamp);
         } else {
             return Promise.reject("Node " + nodeId + " not found")
@@ -82,23 +83,19 @@ function handleAlarmStatusChanged(event) {
     });
 }
 
-function notifyStatusChange(topics, value) {
-    if (value === 'ALARMED') {
-        console.info("2222", topics, value);
+function notifyEvents(topics, event) {
+    console.info("Sending event", topics, event);
 
-        let message = {
-            "data": {
-                "title": "Important announcement",
-                "message": "Hello you!",
-                "url": "www.amazon.com"
-            },
-            "time_to_live": 3600,
-            "collapse_key": "deals"
-        };
+    let message = {
+        "data": {
+            "event": event,
+        },
+        "time_to_live": 3600,
+        "collapse_key": "deals"
+    };
 
-        let finalMessage = JSON.stringify({"GCM": JSON.stringify(message)});
-        topics.forEach(topicArn => publish(topicArn, finalMessage));
-    }
+    let finalMessage = JSON.stringify({"GCM": JSON.stringify(message)}).replace("\\\\", "\\");
+    topics.forEach(topicArn => publish(topicArn, finalMessage));
 }
 
 function publish(topic, message) {
@@ -110,7 +107,8 @@ function publish(topic, message) {
     let sns = new AWS.SNS();
     sns.publish({
         Message: message,
-        TargetArn: topic
+        TargetArn: topic,
+        MessageStructure: 'json'
     }, function (err, data) {
         if (err) {
             console.log(err.stack);

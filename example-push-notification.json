@@ -1,4 +1,6 @@
 {
   "GCM": "{\"data\":{\"title\":\"Important announcement\",\"message\":\"Hello wolrd!\",\"url\":\"www.amazon.com\"},\"time_to_live\": 3600,\"collapse_key\":\"deals\"}"
 }
-       
+
+
+{"GCM":"{\"data\":{\"event\":{\"id\":\"2f96cce7-1ef6-11e8-b109-651a8b3d1fa2\",\"pinId\":\"A0\",\"type\":\"alarm-pin-changed\",\"nodeId\":\"30002b000547343233323032\",\"value\":\"1\",\"timestamp\":\"2018-03-03T15:18:54Z\"}},\"time_to_live\":3600,\"collapse_key\":\"deals\"}"}

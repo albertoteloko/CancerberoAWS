@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const nodeRepository = require('./node-repository');
 
 const region = process.env.AWS_REGION;
 const docClient = new AWS.DynamoDB.DocumentClient();
@@ -16,7 +17,7 @@ module.exports = {
 
         return docClient.scan(params).promise().then(item => {
             if (item.Items !== undefined) {
-                return {"installations": item.Items};
+                return {"installations": Promise.all(item.Items.map(i => loadNodes(i)))};
             } else {
                 return null
             }
@@ -53,3 +54,11 @@ module.exports = {
         });
     }
 };
+
+function loadNodes(installation) {
+    return Promise.all(installation.nodes.map(nodeId => nodeRepository.read(nodeId))).then(nodes => {
+            installation.nodes = nodes;
+            return installation;
+        }
+    )
+}
