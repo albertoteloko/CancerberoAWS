@@ -4,6 +4,7 @@ const AWS = require('aws-sdk');
 
 
 const region = process.env.AWS_REGION;
+const poolId = process.env.POOL_ID;
 
 AWS.config.region = region;
 
@@ -75,12 +76,42 @@ function handleAlarmStatusChanged(event) {
             if ((alarm.status !== undefined) && (alarm.status.value === event.value)) {
                 return Promise.reject("Node " + nodeId + " does not change its status");
             }
-            notifyEvents(node.topic, event);
-            return nodeRepository.updateAlarmStatus(nodeId, event.value, event.source, event.timestamp);
+            return getSourceName(node, event.source).then(sourceName => {
+                notifyEvents(node.topic, event);
+                return nodeRepository.updateAlarmStatus(nodeId, event.value, event.source, sourceName, event.timestamp);
+            });
         } else {
             return Promise.reject("Node " + nodeId + " not found")
         }
     });
+}
+
+function getSourceName(node, source) {
+    try {
+        if (source.startsWith("P:")) {
+            return Promise.resolve(node.modules.alarm.pins[source.substring(2)].name)
+        } else if (source.startsWith("C:")) {
+            return Promise.resolve(node.modules.card.entries[source.substring(2)])
+        } else if (source.startsWith("U:")) {
+            AWS.config.apiVersions = {
+                cognitoidentityserviceprovider: '2016-04-18',
+            };
+
+            let provider = new AWS.CognitoIdentityServiceProvider();
+            let params = {
+                UserPoolId: poolId,
+                Username: source.substring(2)
+            };
+            return provider.adminGetUser(params).promise().then(userParams => {
+                console.log("params", userParams);
+
+                return userParams.UserAttributes.filter(a => a.Name === 'given_name')[0].Value
+            });
+        }
+    } catch (e) {
+        console.log("Error getting source name", e);
+        return Promise.resolve(undefined)
+    }
 }
 
 function notifyEvents(topic, event) {

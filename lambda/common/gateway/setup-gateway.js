@@ -52,7 +52,7 @@ function clearNode(node, token) {
             return common.execute(node.id, "clear", "", token);
         },
         function (ip, node) {
-            return common.execute(node.master, "clear", ip + "@", token);
+            return common.execute(node.master, "clear", ip + "#", token);
         }
     ).then(r => {
         return {"step": "clear", "result": r}
@@ -66,7 +66,7 @@ function clearAlarm(node, token) {
             return common.execute(node.id, "A.disable", "", token);
         },
         function (ip, node) {
-            return common.execute(node.master, "A.disable", ip + "@", token);
+            return common.execute(node.master, "A.disable", ip + "#", token);
         }
     ).then(r => {
         return {"step": "clear-alarm", "result": r}
@@ -80,7 +80,7 @@ function clearCard(node, token) {
             return common.execute(node.id, "C.disable", "", token);
         },
         function (ip, node) {
-            return common.execute(node.master, "C.disable", ip + "@", token);
+            return common.execute(node.master, "C.disable", ip + "#", token);
         }
     ).then(r => {
         return {"step": "clear-card", "result": r}
@@ -95,7 +95,7 @@ function clearEthernetGateway(node, token) {
             return common.execute(node.id, "EG.disable", "", token);
         },
         function (ip, node) {
-            return common.execute(node.master, "EG.disable", ip + "@", token);
+            return common.execute(node.master, "EG.disable", ip + "#", token);
         }
     ).then(r => {
         return {"step": "clear-ethernet-gateway", "result": r}
@@ -111,7 +111,7 @@ function setupAlarm(node, token) {
                 return common.execute(node.id, "A.enable", alarmString, token);
             },
             function (ip, node) {
-                return common.execute(node.master, "A.enable", ip + "@" + alarmString, token);
+                return common.execute(node.master, "A.enable", ip + "#" + alarmString, token);
             }
         ).then(r => {
             return {"step": "alarm", "result": r, "setupLine": alarmString}
@@ -129,7 +129,7 @@ function setupCard(node, token) {
                 return setupCardInternal(node.id, node.modules.card, "", token);
             },
             function (ip, node) {
-                return setupCardInternal(node.master, node.modules.card, ip + "@", token);
+                return setupCardInternal(node.master, node.modules.card, ip + "#", token);
             }
         ).then(r => {
             return {"step": "card", "result": r}
@@ -168,7 +168,7 @@ function setupEthernetGateway(node, token) {
                 return setupEthernetGatewayInternal(node.id, node.modules['ethernet-gateway'], "", token);
             },
             function (ip, node) {
-                return setupEthernetGatewayInternal(node.master, node.modules['ethernet-gateway'], ip + "@", token);
+                return setupEthernetGatewayInternal(node.master, node.modules['ethernet-gateway'], ip + "#", token);
             }
         ).then(r => {
             return {"step": "card-gateway", "result": r}

@@ -60,6 +60,12 @@ resource "aws_iam_role_policy" "domo_slave_lambda_policy" {
                 "dynamodb:DeleteItem"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": "cognito-idp:AdminGetUser",
+            "Resource": "*"
         }
     ]
 }

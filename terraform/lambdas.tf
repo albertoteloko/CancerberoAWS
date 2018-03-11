@@ -47,6 +47,7 @@ resource "aws_lambda_function" "domo-slave-event-handler" {
     variables = {
       SNS_ARN = "${aws_sns_topic.events.arn}",
       ACCOUNT_ID = "${var.account_id}"
+      POOL_ID = "${aws_cognito_user_pool.cancerbero.id}"
     }
   }
 }

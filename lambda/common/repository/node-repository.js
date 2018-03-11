@@ -69,8 +69,8 @@ module.exports = {
 
         return docClient.update(params).promise();
     },
-    updateAlarmStatus: function (nodeId, value, source, timestamp) {
-        console.log("Savings node status: ", nodeId, value, source, timestamp);
+    updateAlarmStatus: function (nodeId, value, source, sourceName, timestamp) {
+        console.log("Savings node status: ", nodeId, value, source, sourceName, timestamp);
 
         let params = {
             TableName: TABLE,
@@ -82,6 +82,7 @@ module.exports = {
                 ":s": {
                     'value': value,
                     'source': source,
+                    'sourceName': sourceName !== undefined ? sourceName : source,
                     'timestamp': timestamp
                 }
             },

@@ -1,7 +1,16 @@
 const nodeRepository = require('repository/node-repository');
 const nodeGateway = require('gateway/node-gateway');
 const validations = require('validations');
+const base64 = require('Base64');
 
+function parseJWT(token) {
+    try {
+        return JSON.parse(base64.atob(token.split('.')[1]));
+    } catch (e) {
+        console.log("raw token error", e);
+        return null;
+    }
+}
 
 exports.handler = function (event, context, callback) {
     console.log("Event", event);
@@ -115,6 +124,9 @@ exports.handler = function (event, context, callback) {
     function handleAction(event, context, callback) {
         let id = event.pathParameters.id;
 
+        const token = parseJWT(event.headers['Authorization']);
+        console.log("Token", token);
+
         if (validations.validString(id)) {
             nodeRepository.read(id)
                 .then(node => {
@@ -123,7 +135,7 @@ exports.handler = function (event, context, callback) {
                         let action = (event.body !== undefined) ? JSON.parse(event.body) : event;
                         console.info("Input action", action);
                         action.timestamp = new Date().toString();
-                        nodeGateway.run(node, action)
+                        nodeGateway.run(node, action, "U:" + token.email)
                             .then(result => {
                                 callback(null, {
                                     statusCode: '200',

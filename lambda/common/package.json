@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "particle-api-js": "^7.0.1"
+    "particle-api-js": "^7.0.1",
+    "Base64": "^1.0.1"
   }
 }

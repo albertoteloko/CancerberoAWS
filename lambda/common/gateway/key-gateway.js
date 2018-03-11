@@ -32,7 +32,7 @@ module.exports = {
 function setNodeStatus(id, ip, currentStatus, source, sharedToken) {
     let promise = sharedToken ? Promise.resolve(sharedToken) : common.login();
     return promise.then(token => {
-        let ipString = common.defined(ip) ? ip + "@" : "";
+        let ipString = common.defined(ip) ? ip + "#" : "";
         let sourceString = common.defined(source) ? "," + source : "";
         if (currentStatus === "IDLE") {
             return common.execute(id, "A.status", ipString + "ACTIVATING" + sourceString, token).then(toStatusResult);

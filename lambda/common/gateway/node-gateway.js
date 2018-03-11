@@ -5,7 +5,7 @@ const validations = require('../validations');
 
 module.exports = {
     run: function (node, action, source) {
-        console.log("Action in node " + node.id + ": ", action);
+        console.log("Action in node " + node.id + ": ", action, "from", source);
 
         let validation = validations.validateAction(action);
 

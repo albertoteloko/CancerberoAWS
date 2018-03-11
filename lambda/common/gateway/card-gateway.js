@@ -64,7 +64,7 @@ module.exports = {
 function addCardEntry(id, ip, cardId, source, sharedToken) {
     let promise = sharedToken ? Promise.resolve(sharedToken) : common.login();
     return promise.then(token => {
-        let ipString = common.defined(ip) ? ip + "@" : "";
+        let ipString = common.defined(ip) ? ip + "#" : "";
         return common.execute(id, "C.add", ipString + cardId, token).then(toCardResult);
     });
 }
@@ -72,7 +72,7 @@ function addCardEntry(id, ip, cardId, source, sharedToken) {
 function removeCardEntry(id, ip, cardId, source, sharedToken) {
     let promise = sharedToken ? Promise.resolve(sharedToken) : common.login();
     return promise.then(token => {
-        let ipString = common.defined(ip) ? ip + "@" : "";
+        let ipString = common.defined(ip) ? ip + "#" : "";
         return common.execute(id, "C.del", ipString + cardId, token).then(toCardResult);
     });
 }
