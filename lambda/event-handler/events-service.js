@@ -107,6 +107,8 @@ function getSourceName(node, source) {
 
                 return userParams.UserAttributes.filter(a => a.Name === 'given_name')[0].Value
             });
+        } else {
+            return Promise.resolve(source);
         }
     } catch (e) {
         console.log("Error getting source name", e);
