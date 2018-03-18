@@ -1,71 +1,59 @@
 {
   "id": "30002b000547343233323032",
-  "lastPing": "2018-01-28T10:38:19Z",
-  "topic": "arn:aws:sns:eu-central-1:598555414863:endpoint/GCM/Cancerbero/5fb0a69f-de51-3b51-ad35-c019f7e591d8",
   "modules": {
     "alarm": {
-      "activatingTime": 15,
-      "suspiciousTime": 15,
+      "activatingTime": 15000,
+      "suspiciousTime": 16000,
       "pins": {
         "A0": {
-          "activations": {
-            "timestamp": "2018-03-03T16:33:56Z",
-            "value": "0"
-          },
           "id": "A0",
           "input": "DIGITAL",
           "mode": "LOW",
           "name": "Main Door",
           "readings": {
-            "timestamp": "2018-03-04T08:41:29Z",
+            "timestamp": "2018-03-18T14:56:09Z",
             "value": "1"
           },
           "threshold": 0,
           "type": "SENSOR"
         },
         "A1": {
-          "activations": {
-            "timestamp": "2018-03-03T16:34:09Z",
-            "value": "0"
-          },
           "id": "A1",
           "input": "DIGITAL",
           "mode": "LOW",
           "name": "Llave",
           "readings": {
-            "timestamp": "2018-03-03T16:34:09Z",
+            "timestamp": "2018-03-18T14:56:09Z",
             "value": "1"
           },
           "threshold": 0,
           "type": "KEY"
         },
         "A2": {
-          "activations": {
-            "timestamp": "2018-02-24T19:10:38Z",
-            "value": "69"
-          },
           "id": "A2",
           "input": "ANALOG",
           "mode": "LOW",
           "name": "Thermometer",
           "readings": {
-            "timestamp": "2018-02-24T19:10:38Z",
-            "value": "69"
+            "timestamp": "2018-03-18T14:56:09Z",
+            "value": "762"
           },
           "threshold": 56,
           "type": "SENSOR",
+          "scale": 0.0244379276637,
           "unit": "ºC"
         }
       },
       "status": {
-        "id": "594d2c5e-f522-11e7-8c3f-9a214cf093ae",
-        "source": "C:04:EF:F3:E2:B9:29:80",
-        "timestamp": "2018-01-27T20:05:54Z",
+        "source": "P:A1",
+        "sourceName": "Llave",
+        "timestamp": "2018-03-18T14:47:46Z",
         "value": "IDLE"
       }
     },
     "card": {
       "entries": {
+        "04:EF:F3:E2:B9:29:80": "Nieves",
         "15:EE:9B:BB": "Guimo"
       },
       "spi": "SPI1",
@@ -83,5 +71,6 @@
     }
   },
   "name": "Casa",
+  "topic": "arn:aws:sns:eu-central-1:598555414863:endpoint/GCM/Cancerbero/5fb0a69f-de51-3b51-ad35-c019f7e591d8",
   "type": "PHOTON"
 }

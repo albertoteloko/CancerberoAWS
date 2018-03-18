@@ -70,12 +70,8 @@ module.exports = {
             return "Missing/Invalid timestamp param";
         }
 
-        if (event.type === "ping") {
-            return this.validatePingEvent(event);
-        } else if (event.type === "alarm-pin-activated") {
-            return this.validatePinActivatedEvent(event);
-        } else if (event.type === "alarm-pin-changed") {
-            return this.validatePinChangedEvent(event);
+        if (event.type === "alarm-pin-value") {
+            return this.validatePinValueEvent(event);
         } else if (event.type === "alarm-status-changed") {
             return this.validateAlarmStatusChangedEvent(event);
         } else if (event.type === "log") {
@@ -83,18 +79,7 @@ module.exports = {
         }
         return null;
     },
-    validatePingEvent(event) {
-        return null;
-    },
-    validatePinActivatedEvent(event) {
-        if (!this.validString(event.pinId)) {
-            return "Missing/Invalid pinId param";
-        } else if (!this.validString(event.value)) {
-            return "Missing/Invalid value param";
-        }
-        return null;
-    },
-    validatePinChangedEvent(event) {
+    validatePinValueEvent(event) {
         if (!this.validString(event.pinId)) {
             return "Missing/Invalid pinId param";
         } else if (!this.validString(event.value)) {

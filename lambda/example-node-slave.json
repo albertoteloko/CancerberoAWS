@@ -1,55 +1,54 @@
 {
   "id": "1234567890",
   "master": "30002b000547343233323032",
-  "installations": [
-    "8fe8e3aa-f21c-11e7-9e16-d3d2028af175"
-  ],
-  "lastPing": "2018-01-25T18:12:34Z",
   "modules": {
     "alarm": {
+      "activatingTime": 15000,
+      "suspiciousTime": 16000,
       "pins": {
         "A0": {
-          "activations": {
-            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2012-12-12T22:00:28",
-            "value": "135"
-          },
           "id": "A0",
           "input": "DIGITAL",
           "mode": "LOW",
-          "name": "Sabotage",
+          "name": "Main Door",
           "readings": {
-            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:35:46Z",
-            "value": 1
+            "timestamp": "2018-03-18T14:56:09Z",
+            "value": "1"
           },
           "threshold": 0,
-          "type": "SABOTAGE"
+          "type": "SENSOR"
         },
         "A1": {
-          "activations": {
-            "id": "4b3167ca-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:26:00Z",
-            "value": 0
+          "id": "A1",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Llave",
+          "readings": {
+            "timestamp": "2018-03-18T14:56:09Z",
+            "value": "1"
           },
+          "threshold": 0,
+          "type": "KEY"
+        },
+        "A2": {
           "id": "A2",
           "input": "ANALOG",
-          "mode": "HIGH",
-          "name": "Termometer",
+          "mode": "LOW",
+          "name": "Thermometer",
           "readings": {
-            "id": "505e3b24-f522-11e7-8c3f-9a214cf093ae",
-            "timestamp": "2018-01-25T18:35:46Z",
-            "value": 1
+            "timestamp": "2018-03-18T14:56:09Z",
+            "value": "762"
           },
-          "threshold": 50,
-          "type": "SAFETY",
+          "threshold": 56,
+          "type": "SENSOR",
+          "scale": 0.0244379276637,
           "unit": "ºC"
         }
       },
       "status": {
-        "id": "594d2c5e-f522-11e7-8c3f-9a214cf093ae",
-        "source": "lol",
-        "timestamp": "2018-01-25T18:28:40Z",
+        "source": "P:A1",
+        "sourceName": "Llave",
+        "timestamp": "2018-03-18T14:47:46Z",
         "value": "IDLE"
       }
     }

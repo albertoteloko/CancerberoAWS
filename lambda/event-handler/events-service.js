@@ -10,12 +10,8 @@ AWS.config.region = region;
 
 module.exports = {
     handle(event) {
-        if (event.type === 'ping') {
-            return handlePing(event);
-        } else if (event.type === 'alarm-pin-activated') {
-            return handlePinActivated(event);
-        } else if (event.type === 'alarm-pin-changed') {
-            return handlePinChanged(event);
+        if (event.type === 'alarm-pin-value') {
+            return handlePinValue(event);
         } else if (event.type === 'alarm-status-changed') {
             return handleAlarmStatusChanged(event);
         } else if (event.type === 'log') {
@@ -27,38 +23,16 @@ module.exports = {
     }
 };
 
-function handlePing(event) {
-    return nodeRepository.updatePing(event.nodeId, event.timestamp);
-}
-
-function handlePinActivated(event) {
+function handlePinValue(event) {
     const nodeId = event.nodeId;
     return nodeRepository.read(nodeId).then(node => {
         if (node != null) {
             let pin = node.modules.alarm.pins[event.pinId];
             if (pin !== undefined) {
-                notifyEvents(node.topic, event);
-                return nodeRepository.setPinActivated(nodeId, event.pinId, event.value, event.timestamp);
-            } else {
-                return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
-            }
-        } else {
-            return Promise.reject("Node " + nodeId + " not found")
-        }
-    });
-}
-
-function handlePinChanged(event) {
-    const nodeId = event.nodeId;
-    return nodeRepository.read(nodeId).then(node => {
-        if (node != null) {
-            let pin = node.modules.alarm.pins[event.pinId];
-            if (pin !== undefined) {
-                if ((pin.readings !== undefined) && (pin.readings.value === event.value)) {
-                    return Promise.reject("Node " + nodeId + " and pin " + event.pinId + " does not change its value");
+                if ((pin.readings !== undefined) && (pin.readings.value !== event.value)) {
+                    notifyEvents(node.topic, event);
                 }
-                notifyEvents(node.topic, event);
-                return nodeRepository.setPinReading(nodeId, event.pinId, event.value, event.timestamp);
+                return nodeRepository.setPinValue(nodeId, event.pinId, event.value, event.timestamp);
             } else {
                 return Promise.reject("Node " + nodeId + " does not have a pin " + event.pinId);
             }
