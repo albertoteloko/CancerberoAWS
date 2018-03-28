@@ -96,9 +96,7 @@ function notifyEvents(topic, event) {
     let message = {
         "data": {
             "event": event,
-        },
-        "time_to_live": 3600,
-        "collapse_key": "deals"
+        }
     };
 
     let finalMessage = JSON.stringify({"GCM": JSON.stringify(message)}).replace("\\\\", "\\");

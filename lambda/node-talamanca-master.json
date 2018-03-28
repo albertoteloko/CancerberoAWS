@@ -1,0 +1,54 @@
+{
+  "id": "470032000c51343334363138",
+  "modules": {
+    "alarm": {
+      "activatingTime": 15000,
+      "pins": {
+        "A0": {
+          "id": "A0",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Main Door",
+          "readings": {
+            "timestamp": "2018-03-27T19:09:43Z",
+            "value": "0"
+          },
+          "threshold": 0,
+          "type": "SENSOR"
+        },
+        "A5": {
+          "id": "A5",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Sabotage",
+          "readings": {
+            "timestamp": "2018-03-27T19:09:43Z",
+            "value": "0"
+          },
+          "threshold": 0,
+          "type": "SABOTAGE"
+        }
+      },
+      "status": {
+        "source": "U:albertocresposanchez@gmail.com",
+        "sourceName": "Alberto Crespo",
+        "timestamp": "2018-03-27T19:09:14Z",
+        "value": "ACTIVATED"
+      },
+      "suspiciousTime": 16000
+    },
+    "ethernet-gateway": {
+      "ip": "192.168.1.66",
+      "mac": "DE:AD:BE:EF:FE:ED",
+      "nodes": {
+        "1234567890": "192.168.1.70"
+      },
+      "port": 6969,
+      "spi": "SPI1",
+      "ss": "D5"
+    }
+  },
+  "name": "Talamanca",
+  "topic": "arn:aws:sns:eu-central-1:598555414863:endpoint/GCM/Cancerbero/5fb0a69f-de51-3b51-ad35-c019f7e591d8",
+  "type": "ELECTRON"
+}

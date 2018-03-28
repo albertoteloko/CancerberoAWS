@@ -1,0 +1,64 @@
+{
+  "id": "30002b000547343233323032",
+  "modules": {
+    "alarm": {
+      "activatingTime": 15000,
+      "pins": {
+        "A0": {
+          "id": "A0",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Moimiento 1",
+          "readings": {
+            "timestamp": "2018-03-24T15:32:57Z",
+            "value": "1"
+          },
+          "threshold": 0,
+          "type": "SENSOR"
+        },
+        "A4": {
+          "id": "A4",
+          "input": "DIGITAL",
+          "mode": "HIGH",
+          "name": "Moimiento 2",
+          "readings": {
+            "timestamp": "2018-03-24T15:33:01Z",
+            "value": "0"
+          },
+          "threshold": 0,
+          "type": "SENSOR"
+        },
+        "A5": {
+          "id": "A5",
+          "input": "DIGITAL",
+          "mode": "LOW",
+          "name": "Sabotage",
+          "readings": {
+            "timestamp": "2018-03-24T15:32:32Z",
+            "value": "1"
+          },
+          "threshold": 0,
+          "type": "SABOTAGE"
+        }
+      },
+      "status": {
+        "source": "Unknown",
+        "sourceName": "Unknown",
+        "timestamp": "2018-03-24T14:40:20Z",
+        "value": "IDLE"
+      },
+      "suspiciousTime": 16000
+    },
+    "card": {
+      "entries": {
+        "04:EF:F3:E2:B9:29:80": "Nieves",
+        "15:EE:9B:BB": "Guimo"
+      },
+      "spi": "SPI1",
+      "ss": "D5"
+    }
+  },
+  "name": "Casa",
+  "topic": "arn:aws:sns:eu-central-1:598555414863:endpoint/GCM/Cancerbero/5fb0a69f-de51-3b51-ad35-c019f7e591d8",
+  "type": "PHOTON"
+}

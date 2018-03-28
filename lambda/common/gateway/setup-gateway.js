@@ -4,12 +4,15 @@ module.exports = {
     setup: function (node, modules, source) {
         if (modules.length === 0) {
             return common.login().then(token => {
-                return Promise.all([
-                    clearNode(node, token),
-                    setupCard(node, token),
-                    setupAlarm(node, token),
-                    setupEthernetGateway(node, token)
-                ])
+                return clearNode(node, token).then(clearResult => {
+                    return setupAlarm(node, token).then(alarmResult => {
+                        return setupCard(node, token).then(cardResult => {
+                            return setupEthernetGateway(node, token).then(ethernetGatewayResult => {
+                                return [clearResult, alarmResult, cardResult, ethernetGatewayResult];
+                            });
+                        });
+                    });
+                });
             });
         } else {
             return common.login().then(token => {
